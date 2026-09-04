@@ -5,8 +5,11 @@
  * Récupère les nouveaux scrutins publiés par l'Assemblée nationale (open data officiel)
  * et met à jour data/lois.json avec le détail des votes par groupe.
  *
- * SOURCE OFFICIELLE (aucune donnée inventée) :
+ * SOURCES OFFICIELLES (aucune donnée inventée) :
+ *   Scrutins :
  *   https://data.assemblee-nationale.fr/static/openData/repository/17/loi/scrutins/Scrutins.json.zip
+ *   Organes (pour résoudre organeRef -> sigle du groupe politique) :
+ *   https://data.assemblee-nationale.fr/static/openData/repository/17/amo/deputes_actifs_mandats_actifs_organes/AMO10_deputes_actifs_mandats_actifs_organes.json.zip
  *   Licence ouverte Etalab.
  *
  * PRINCIPE DE SÉCURITÉ (important) : ce script ne fait JAMAIS confiance à sa propre lecture
@@ -16,6 +19,13 @@
  * avec un chiffre potentiellement faux — cohérent avec la règle du site : jamais de données
  * inventées ou approximatives.
  *
+ * Le détail par groupe des scrutins de l'AN ne contient pas le sigle du groupe directement :
+ * chaque groupe n'y est identifié que par un "organeRef" (identifiant opaque, ex. "PO845401").
+ * Pour retrouver le sigle (ex. "RN"), ce script télécharge donc aussi le jeu de données des
+ * organes actifs (AMO10) et construit la correspondance organeRef -> sigle à partir des
+ * organes de type "GP" (groupe politique) — jamais en devinant, toujours depuis la donnée
+ * officielle à jour.
+ *
  * USAGE :
  *   node scripts/fetch-scrutins.js              # récupère et met à jour data/lois.json
  *   node scripts/fetch-scrutins.js --dry-run     # affiche ce qui serait ajouté, sans écrire
@@ -24,7 +34,7 @@
  * DÉPENDANCES : Node.js 18+ (fetch natif), aucun paquet npm requis.
  */
 
-import { readFile, writeFile, mkdtemp } from "fs/promises";
+import { readFile, writeFile, mkdtemp, readdir } from "fs/promises";
 import { createWriteStream, existsSync } from "fs";
 import path from "path";
 import os from "os";
@@ -37,13 +47,19 @@ const execFileAsync = promisify(execFile);
 const SCRUTINS_ZIP_URL =
   "https://data.assemblee-nationale.fr/static/openData/repository/17/loi/scrutins/Scrutins.json.zip";
 
+// Jeu de données des député·es et organes actifs — sert uniquement à résoudre organeRef -> sigle
+// du groupe politique (voir buildOrganeRefToSigle ci-dessous).
+const ORGANES_ZIP_URL =
+  "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/deputes_actifs_mandats_actifs_organes/AMO10_deputes_actifs_mandats_actifs_organes.json.zip";
+
 const DATA_FILE = path.resolve("data/lois.json");
 const REPORT_FILE = path.resolve("data/fetch-scrutins-report.json");
 
-// Table de correspondance entre le sigle officiel du groupe (tel que publié par l'AN)
-// et l'identifiant court utilisé sur le site. À ajuster si l'AN change un sigle
-// (ex. en cas de scission/fusion de groupe) — le script log un avertissement pour tout
-// sigle rencontré qui n'est pas dans cette table, plutôt que de l'ignorer silencieusement.
+// Table de correspondance entre le sigle officiel du groupe (tel que publié par l'AN,
+// résolu via organeRef -> organe.libelleAbrev) et l'identifiant court utilisé sur le site.
+// À ajuster si l'AN change un sigle (ex. en cas de scission/fusion de groupe) — le script log
+// un avertissement pour tout sigle rencontré qui n'est pas dans cette table, plutôt que de
+// l'ignorer silencieusement.
 const SIGLE_VERS_ID = {
   "RN": "RN",
   "EPR": "EPR",
@@ -51,7 +67,7 @@ const SIGLE_VERS_ID = {
   "LFI-NFP": "LFI",
   "LFI": "LFI",
   "SOC": "SOC",
-  "DR": "LR",
+  "DR": "LR", // "Droite Républicaine", nom du groupe LR depuis 2024
   "LR": "LR",
   "ECOS": "ECO",
   "ECOLO": "ECO",
@@ -60,6 +76,7 @@ const SIGLE_VERS_ID = {
   "GDR": "GDR",
   "LIOT": "LIOT",
   "UDR": "UDR",
+  "UDDPLR": "UDR", // sigle officiel AN pour "Union des droites pour la République"
   "NI": "NI",
 };
 
@@ -76,11 +93,11 @@ function warn(...m) {
 }
 
 async function downloadAndExtract(url, destDir) {
-  const zipPath = path.join(destDir, "scrutins.zip");
+  const zipPath = path.join(destDir, "archive.zip");
   log("Téléchargement :", url);
   const res = await fetch(url);
   if (!res.ok) {
-    throw new Error(`Échec du téléchargement (${res.status} ${res.statusText}) — l'URL a peut-être changé, vérifier data.assemblee-nationale.fr/opendata`);
+    throw new Error(`Échec du téléchargement (${res.status}# ${res.statusText}) — l'URL a peut-être changé, vérifier data.assemblee-nationale.fr/opendata`);
   }
   await pipeline(res.body, createWriteStream(zipPath));
   log("Décompression…");
@@ -92,6 +109,55 @@ async function downloadAndExtract(url, destDir) {
 async function listScrutinFiles(dir) {
   const { stdout } = await execFileAsync("find", [dir, "-name", "*.json", "-type", "f"]);
   return stdout.split("\n").filter(Boolean);
+}
+
+/**
+ * Cherche récursivement un dossier nommé `name` sous `base` (l'archive des organes n'a pas
+ * toujours la même profondeur de dossiers selon les exports de l'AN, ex. "json/organe/").
+ */
+async function findDirNamed(base, name) {
+  const entries = await readdir(base, { withFileTypes: true });
+  for (const e of entries) {
+    if (e.isDirectory()) {
+      if (e.name === name) return path.join(base, e.name);
+      const found = await findDirNamed(path.join(base, e.name), name);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
+/**
+ * Construit la correspondance organeRef (uid, ex. "PO845401") -> sigle officiel (ex. "RN")
+ * à partir des fichiers organe de type "GP" (groupe politique) de l'archive AMO10.
+ * Ne fait aucune supposition : si le dossier "organe" est introuvable ou vide, retourne une
+ * table vide (les scrutins seront alors rejetés faute de sigle résolu, jamais publiés avec
+ * un sigle deviné).
+ */
+async function buildOrganeRefToSigle(dir) {
+  const organeDir = await findDirNamed(dir, "organe");
+  const table = {};
+  if (!organeDir) {
+    warn("Dossier 'organe' introuvable dans l'archive des organes — aucune correspondance organeRef -> sigle disponible.");
+    return table;
+  }
+  const files = await readdir(organeDir);
+  let nbGroupes = 0;
+  for (const f of files) {
+    let raw;
+    try {
+      raw = JSON.parse(await readFile(path.join(organeDir, f), "utf-8"));
+    } catch {
+      continue;
+    }
+    const o = raw.organe;
+    if (o && o.codeType === "GP" && o.uid && o.libelleAbrev) {
+      table[o.uid] = o.libelleAbrev;
+      nbGroupes++;
+    }
+  }
+  log(`${nbGroupes} groupe(s) politique(s) résolu(s) depuis l'archive des organes.`);
+  return table;
 }
 
 function moisFr(m) {
@@ -107,9 +173,10 @@ function formatDateFr(isoDate) {
 /**
  * Extrait le détail par groupe d'un objet scrutin brut (JSON tel que publié par l'AN),
  * et vérifie que la somme recalculée correspond à la synthèse officielle.
+ * `organeRefToSigle` est la correspondance construite par buildOrganeRefToSigle().
  * Retourne { ok: true, votes, ... } ou { ok: false, raison }.
  */
-function parseScrutin(raw) {
+function parseScrutin(raw, organeRefToSigle) {
   const s = raw.scrutin;
   if (!s) return { ok: false, raison: "pas de clé 'scrutin' à la racine" };
 
@@ -134,10 +201,16 @@ function parseScrutin(raw) {
   let sommePour = 0, sommeContre = 0, sommeAbst = 0;
 
   for (const g of groupesArr) {
-    const sigle = g.organeRef ? undefined : undefined; // le sigle n'est pas toujours inline
-    // Selon les exports AN, le sigle peut être en g.groupe.sigle ou nécessiter une table organeRef -> sigle.
-    // On tente les emplacements connus ; si aucun ne fonctionne, on loggue le organeRef brut pour investigation.
-    const sigleTrouve = g.sigle || g.organe?.libelleAbrev || g.libelleAbrev || null;
+    // Le sigle n'est jamais inline dans les exports actuels de l'AN : chaque groupe n'est
+    // identifié que par organeRef. On tente néanmoins les emplacements inline connus en premier
+    // (au cas où l'AN les ajouterait un jour ou pour d'anciens formats), puis on résout via la
+    // table organeRef -> sigle construite depuis la donnée officielle des organes.
+    const sigleTrouve =
+      g.sigle ||
+      g.organe?.libelleAbrev ||
+      g.libelleAbrev ||
+      (g.organeRef && organeRefToSigle[g.organeRef]) ||
+      null;
     const decompte = g.vote?.decompteVoix || g.decompteVoix;
     if (!sigleTrouve || !decompte) {
       sigleInconnus.push(g.organeRef || JSON.stringify(g).slice(0, 80));
@@ -201,6 +274,10 @@ async function main() {
   const files = await listScrutinFiles(tmpDir);
   log(`${files.length} fichiers de scrutins trouvés dans l'archive.`);
 
+  const organesDir = await mkdtemp(path.join(os.tmpdir(), "an-organes-"));
+  await downloadAndExtract(ORGANES_ZIP_URL, organesDir);
+  const organeRefToSigle = await buildOrganeRefToSigle(organesDir);
+
   const nouveaux = [];
   const rejets = [];
   let traites = 0;
@@ -222,7 +299,7 @@ async function main() {
     if (numero && existingIds.has(`an-scrutin-${numero}`)) continue; // déjà connu
 
     traites++;
-    const parsed = parseScrutin(raw);
+    const parsed = parseScrutin(raw, organeRefToSigle);
     if (!parsed.ok) {
       rejets.push({ fichier: f, raison: parsed.raison });
       continue;
