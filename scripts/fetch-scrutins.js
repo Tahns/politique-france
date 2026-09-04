@@ -9,7 +9,7 @@
  *   Scrutins :
  *   https://data.assemblee-nationale.fr/static/openData/repository/17/loi/scrutins/Scrutins.json.zip
  *   Organes (pour résoudre organeRef -> sigle du groupe politique) :
- *   https://data.assemblee-nationale.fr/static/openData/repository/17/amo/deputes_actifs_mandats_actifs_organes/AMO10_deputes_actifs_mandats_actifs_organes.json.zip
+ *   https://data.assemblee-nationale.fr/static/openData/repository/17/amo/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.json.zip
  *   Licence ouverte Etalab.
  *
  * PRINCIPE DE SÉCURITÉ (important) : ce script ne fait JAMAIS confiance à sa propre lecture
@@ -21,10 +21,15 @@
  *
  * Le détail par groupe des scrutins de l'AN ne contient pas le sigle du groupe directement :
  * chaque groupe n'y est identifié que par un "organeRef" (identifiant opaque, ex. "PO845401").
- * Pour retrouver le sigle (ex. "RN"), ce script télécharge donc aussi le jeu de données des
- * organes actifs (AMO10) et construit la correspondance organeRef -> sigle à partir des
- * organes de type "GP" (groupe politique) — jamais en devinant, toujours depuis la donnée
- * officielle à jour.
+ * Pour retrouver le sigle (ex. "RN"), ce script télécharge donc aussi le jeu de données AMO30
+ * ("tous acteurs, tous mandats, tous organes, historique") et construit la correspondance
+ * organeRef -> sigle à partir des organes de type "GP" (groupe politique) de la législature 17.
+ * On utilise volontairement le jeu de données HISTORIQUE (AMO30) plutôt que le jeu "actifs
+ * uniquement" (AMO10) : un scrutin ancien peut référencer un organeRef de groupe depuis
+ * renommé ou dissous (ex. un groupe qui change de nom en cours de législature reçoit un nouvel
+ * organeRef ; l'ancien n'apparaît plus dans les organes "actifs" mais reste référencé par les
+ * scrutins passés). Sans l'historique, ces scrutins seraient rejetés à tort faute de sigle
+ * résolu — jamais en devinant, toujours depuis la donnée officielle.
  *
  * USAGE :
  *   node scripts/fetch-scrutins.js              # récupère et met à jour data/lois.json
@@ -47,10 +52,14 @@ const execFileAsync = promisify(execFile);
 const SCRUTINS_ZIP_URL =
   "https://data.assemblee-nationale.fr/static/openData/repository/17/loi/scrutins/Scrutins.json.zip";
 
-// Jeu de données des député·es et organes actifs — sert uniquement à résoudre organeRef -> sigle
-// du groupe politique (voir buildOrganeRefToSigle ci-dessous).
+// Jeu de données "tous organes, historique" — sert uniquement à résoudre organeRef -> sigle
+// du groupe politique (voir buildOrganeRefToSigle ci-dessous). Contient aussi les organes
+// dissous/renommés (contrairement au jeu "actifs uniquement"), nécessaire pour résoudre
+// certains scrutins passés référençant un ancien organeRef de groupe.
 const ORGANES_ZIP_URL =
-  "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/deputes_actifs_mandats_actifs_organes/AMO10_deputes_actifs_mandats_actifs_organes.json.zip";
+  "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.json.zip";
+
+const LEGISLATURE = "17";
 
 const DATA_FILE = path.resolve("data/lois.json");
 const REPORT_FILE = path.resolve("data/fetch-scrutins-report.json");
@@ -129,10 +138,11 @@ async function findDirNamed(base, name) {
 
 /**
  * Construit la correspondance organeRef (uid, ex. "PO845401") -> sigle officiel (ex. "RN")
- * à partir des fichiers organe de type "GP" (groupe politique) de l'archive AMO10.
- * Ne fait aucune supposition : si le dossier "organe" est introuvable ou vide, retourne une
- * table vide (les scrutins seront alors rejetés faute de sigle résolu, jamais publiés avec
- * un sigle deviné).
+ * à partir des fichiers organe de type "GP" (groupe politique) de la législature 17, en
+ * puisant dans l'archive historique AMO30 (inclut les organes dissous/renommés, pas
+ * seulement les organes actifs aujourd'hui). Ne fait aucune supposition : si le dossier
+ * "organe" est introuvable ou vide, retourne une table vide (les scrutins seront alors
+ * rejetés faute de sigle résolu, jamais publiés avec un sigle deviné).
  */
 async function buildOrganeRefToSigle(dir) {
   const organeDir = await findDirNamed(dir, "organe");
@@ -151,12 +161,12 @@ async function buildOrganeRefToSigle(dir) {
       continue;
     }
     const o = raw.organe;
-    if (o && o.codeType === "GP" && o.uid && o.libelleAbrev) {
+    if (o && o.codeType === "GP" && o.legislature === LEGISLATURE && o.uid && o.libelleAbrev) {
       table[o.uid] = o.libelleAbrev;
       nbGroupes++;
     }
   }
-  log(`${nbGroupes} groupe(s) politique(s) résolu(s) depuis l'archive des organes.`);
+  log(`${nbGroupes} groupe(s) politique(s) résolu(s) depuis l'archive des organes (législature ${LEGISLATURE}, y compris groupes dissous/renommés).`);
   return table;
 }
 
