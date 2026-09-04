@@ -15,21 +15,20 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: DIAGNOSTIC temporaire - trouver le dataset des organes
+      - name: DIAGNOSTIC temporaire - contenu complet du zip et catalogue
         run: |
-          for url in \
-            "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/organes/Organe.json.zip" \
-            "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/organes_divises/Organes.json.zip" \
-            "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/deputes_actifs_mandats_actifs_organes_divises/AMO10_deputes_actifs_mandats_actifs_organes_divises.json.zip" \
-            "https://data.assemblee-nationale.fr/static/openData/repository/17/organe/Organe.json.zip" \
-            "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/organes_acteurs/Organes.json.zip" \
-            "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/liste_organe_acteur/Organe.json.zip" \
-            ; do
-            code=$(curl -s -o /dev/null -w "%{http_code}" -L "$url")
-            echo "$code  $url"
-          done
-          echo "--- listing repository/17/amo/ via index if possible ---"
-          curl -s "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/" | head -c 2000 || true
+          curl -sL -o /tmp/s.zip "https://data.assemblee-nationale.fr/static/openData/repository/17/loi/scrutins/Scrutins.json.zip"
+          mkdir -p /tmp/s && unzip -q -o /tmp/s.zip -d /tmp/s
+          echo "=== Arborescence complète (hors VTANR) ==="
+          find /tmp/s -type f | grep -v 'VTANR' | head -50
+          echo "=== Dossiers ==="
+          find /tmp/s -type d
+          echo "=== Total fichiers ==="
+          find /tmp/s -type f | wc -l
+          echo "=== Page catalogue AN (recherche liens organe/acteur) ==="
+          curl -sL "https://data.assemblee-nationale.fr/acteurs/deputes-en-exercice" | grep -oE 'href="[^"]*\.zip"' | sort -u | head -30
+          echo "=== Page catalogue AN generique ==="
+          curl -sL "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/deputes_actifs_mandats_actifs_organes_divises/" -o /dev/null -w "%{http_code}\n"
       - name: Récupérer les nouveaux scrutins de l'Assemblée nationale
         run: node scripts/fetch-scrutins.js
       - name: Récupérer les indicateurs INSEE
