@@ -97,7 +97,7 @@ async function downloadAndExtract(url, destDir) {
   log("Téléchargement :", url);
   const res = await fetch(url);
   if (!res.ok) {
-    throw new Error(`Échec du téléchargement (${res.status}# ${res.statusText}) — l'URL a peut-être changé, vérifier data.assemblee-nationale.fr/opendata`);
+    throw new Error(`Échec du téléchargement (${res.status} ${res.statusText}) — l'URL a peut-être changé, vérifier data.assemblee-nationale.fr/opendata`);
   }
   await pipeline(res.body, createWriteStream(zipPath));
   log("Décompression…");
@@ -310,7 +310,7 @@ async function main() {
   log(`${nouveaux.length} nouveau(x) scrutin(s) valide(s), ${rejets.length} rejeté(s) ou déjà connus.`);
 
   if (nouveaux.length > 0 && !DRY_RUN) {
-    existing.lois.push(...nouveaux.map(({ dateISO, ...l }) => l));
+    existing.lois.push(...nouveaux.map(({ dateISO, ok, ...l }) => l));
     existing.lastUpdated = new Date().toISOString();
     await writeFile(DATA_FILE, JSON.stringify(existing, null, 2) + "\n");
     log("data/lois.json mis à jour.");
