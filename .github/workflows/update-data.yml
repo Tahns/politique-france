@@ -15,6 +15,24 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: Nettoyage temporaire - retirer le champ ok superflu
+        run: |
+          node -e "
+          const fs = require('fs');
+          const data = JSON.parse(fs.readFileSync('data/lois.json', 'utf-8'));
+          let count = 0;
+          data.lois = data.lois.map(function (l) {
+            if (Object.prototype.hasOwnProperty.call(l, 'ok')) {
+              count++;
+              const rest = Object.assign({}, l);
+              delete rest.ok;
+              return rest;
+            }
+            return l;
+          });
+          fs.writeFileSync('data/lois.json', JSON.stringify(data, null, 2) + String.fromCharCode(10));
+          console.log('Nettoyage: ' + count + ' entree(s) corrigee(s).');
+          "
       - name: Récupérer les nouveaux scrutins de l'Assemblée nationale
         run: node scripts/fetch-scrutins.js
       - name: Récupérer les indicateurs INSEE
