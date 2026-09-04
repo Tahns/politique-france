@@ -15,14 +15,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: DIAGNOSTIC temporaire - inspecter organeRef
+      - name: DIAGNOSTIC temporaire - tester AMO10 et AMO40
         run: |
-          curl -sL -o /tmp/o.zip "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/acteurs_mandats_organes_divises/AMO50_acteurs_mandats_organes_divises.json.zip"
-          mkdir -p /tmp/o && unzip -q -o /tmp/o.zip -d /tmp/o
-          echo "=== Recherche brute PO845401 ==="
-          grep -rl "845401" /tmp/o | head -5
-          echo "=== Contenu si trouve ==="
-          find /tmp/o -iname "PO845401.json" -exec cat {} \;
+          echo "=== AMO10 deputes_actifs_mandats_actifs_organes ==="
+          curl -sL -o /tmp/a10.zip "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/deputes_actifs_mandats_actifs_organes/AMO10_deputes_actifs_mandats_actifs_organes.json.zip"
+          ls -la /tmp/a10.zip
+          mkdir -p /tmp/a10 && unzip -q -o /tmp/a10.zip -d /tmp/a10
+          find /tmp/a10 -iname "PO845401.json" -exec cat {} \;
+          echo "--- si vide, recherche brute ---"
+          grep -rl "845401" /tmp/a10 | head -5
+          echo "=== Structure des dossiers AMO10 ==="
+          find /tmp/a10 -maxdepth 3 -type d
           node -e "
             const fs = require('fs');
             const path = require('path');
@@ -37,30 +40,29 @@ jobs:
               }
               return null;
             }
-            const dir = findDir('/tmp/o', 'organe');
-            console.log('dir organe =', dir);
-            const files = fs.readdirSync(dir);
-            console.log('nb fichiers organe =', files.length);
-            const parLeg = {};
-            const parType = {};
-            for (const f of files) {
-              const raw = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf-8'));
-              const o = raw.organe;
-              parType[o.codeType] = (parType[o.codeType]||0)+1;
-              if (o.codeType === 'GP') {
-                parLeg[o.legislature] = (parLeg[o.legislature]||0)+1;
+            const dir = findDir('/tmp/a10', 'organe');
+            console.log('dir organe AMO10 =', dir);
+            if (dir) {
+              const files = fs.readdirSync(dir);
+              console.log('nb fichiers organe AMO10 =', files.length);
+              const parLeg = {};
+              for (const f of files) {
+                const raw = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf-8'));
+                const o = raw.organe;
+                if (o.codeType === 'GP') {
+                  parLeg[o.legislature] = (parLeg[o.legislature]||0)+1;
+                }
               }
+              console.log('GP par legislature AMO10:', JSON.stringify(parLeg));
+              const gp17 = files.filter(f => {
+                const raw = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf-8'));
+                return raw.organe.codeType === 'GP' && raw.organe.legislature === '17';
+              }).map(f => {
+                const raw = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf-8'));
+                return {uid: raw.organe.uid, libelle: raw.organe.libelle, libelleAbrev: raw.organe.libelleAbrev};
+              });
+              console.log('GP legislature 17 AMO10:', JSON.stringify(gp17, null, 2));
             }
-            console.log('Types organe:', JSON.stringify(parType));
-            console.log('GP par legislature:', JSON.stringify(parLeg));
-            const gp17 = files.filter(f => {
-              const raw = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf-8'));
-              return raw.organe.codeType === 'GP' && raw.organe.legislature === '17';
-            }).map(f => {
-              const raw = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf-8'));
-              return {uid: raw.organe.uid, libelle: raw.organe.libelle, libelleAbrev: raw.organe.libelleAbrev};
-            });
-            console.log('GP legislature 17:', JSON.stringify(gp17, null, 2));
           "
       - name: Récupérer les nouveaux scrutins de l'Assemblée nationale
         run: node scripts/fetch-scrutins.js
