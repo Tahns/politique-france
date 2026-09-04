@@ -15,24 +15,52 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: DIAGNOSTIC temporaire - lister les groupes GP
+      - name: DIAGNOSTIC temporaire - inspecter organeRef
         run: |
           curl -sL -o /tmp/o.zip "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/acteurs_mandats_organes_divises/AMO50_acteurs_mandats_organes_divises.json.zip"
           mkdir -p /tmp/o && unzip -q -o /tmp/o.zip -d /tmp/o
+          echo "=== Recherche brute PO845401 ==="
+          grep -rl "845401" /tmp/o | head -5
+          echo "=== Contenu si trouve ==="
+          find /tmp/o -iname "PO845401.json" -exec cat {} \;
           node -e "
             const fs = require('fs');
-            const dir = '/tmp/o/organe';
+            const path = require('path');
+            function findDir(base, name) {
+              const entries = fs.readdirSync(base, {withFileTypes:true});
+              for (const e of entries) {
+                if (e.isDirectory()) {
+                  if (e.name === name) return path.join(base, e.name);
+                  const found = findDir(path.join(base, e.name), name);
+                  if (found) return found;
+                }
+              }
+              return null;
+            }
+            const dir = findDir('/tmp/o', 'organe');
+            console.log('dir organe =', dir);
             const files = fs.readdirSync(dir);
-            let count = 0;
+            console.log('nb fichiers organe =', files.length);
+            const parLeg = {};
+            const parType = {};
             for (const f of files) {
-              const raw = JSON.parse(fs.readFileSync(dir + '/' + f, 'utf-8'));
+              const raw = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf-8'));
               const o = raw.organe;
+              parType[o.codeType] = (parType[o.codeType]||0)+1;
               if (o.codeType === 'GP') {
-                console.log(JSON.stringify({uid: o.uid, libelle: o.libelle, libelleAbrev: o.libelleAbrev, legislature: o.legislature, dateFin: o.viMoDe && o.viMoDe.dateFin}));
-                count++;
+                parLeg[o.legislature] = (parLeg[o.legislature]||0)+1;
               }
             }
-            console.log('TOTAL GP:', count);
+            console.log('Types organe:', JSON.stringify(parType));
+            console.log('GP par legislature:', JSON.stringify(parLeg));
+            const gp17 = files.filter(f => {
+              const raw = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf-8'));
+              return raw.organe.codeType === 'GP' && raw.organe.legislature === '17';
+            }).map(f => {
+              const raw = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf-8'));
+              return {uid: raw.organe.uid, libelle: raw.organe.libelle, libelleAbrev: raw.organe.libelleAbrev};
+            });
+            console.log('GP legislature 17:', JSON.stringify(gp17, null, 2));
           "
       - name: Récupérer les nouveaux scrutins de l'Assemblée nationale
         run: node scripts/fetch-scrutins.js
