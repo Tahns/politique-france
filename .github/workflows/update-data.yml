@@ -15,6 +15,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: DIAGNOSTIC temporaire - structure brute d'un scrutin
+        run: |
+          curl -sL -o /tmp/s.zip "https://data.assemblee-nationale.fr/static/openData/repository/17/loi/scrutins/Scrutins.json.zip"
+          mkdir -p /tmp/s && unzip -q -o /tmp/s.zip -d /tmp/s
+          F=$(find /tmp/s -name '*.json' -type f | sort | tail -1)
+          echo "=== FICHIER: $F ==="
+          cat "$F" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{console.log(JSON.stringify(JSON.parse(d), null, 2).slice(0, 6000))})"
       - name: Récupérer les nouveaux scrutins de l'Assemblée nationale
         run: node scripts/fetch-scrutins.js
       - name: Récupérer les indicateurs INSEE
