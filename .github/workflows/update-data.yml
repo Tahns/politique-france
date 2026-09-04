@@ -15,23 +15,56 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: Nettoyage temporaire - retirer le champ ok superflu
+      - name: DIAGNOSTIC temporaire
         run: |
-          node -e "
-          const fs = require('fs');
-          const data = JSON.parse(fs.readFileSync('data/lois.json', 'utf-8'));
-          let count = 0;
-          data.lois = data.lois.map(function (l) {
-            if (Object.prototype.hasOwnProperty.call(l, 'ok')) {
-              count++;
-              const rest = Object.assign({}, l);
-              delete rest.ok;
-              return rest;
+          set -x
+          echo "--- Codes HTTP pour differentes URLs candidates ---"
+          for url in \
+            "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/deputes_actifs_mandats_actifs_organes/AMO10_deputes_actifs_mandats_actifs_organes.json.zip" \
+            "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/deputes_actifs_mandats_inactifs_organes/AMO15_deputes_actifs_mandats_inactifs_organes.json.zip" \
+            "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/organes_divises/AMO40_organes_divises.json.zip" \
+            "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/deputes_senateurs_ministres_legislature/AMO30_deputes_senateurs_ministres_legislature.json.zip" \
+            "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/organes/AMO20_organes.json.zip" \
+            ; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" "$url")
+            echo "$code  $url"
+          done
+
+          echo "--- Recherche de PO847173 dans AMO10 (deja connu comme actif) ---"
+          mkdir -p /tmp/amo10
+          curl -s -o /tmp/amo10.zip "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/deputes_actifs_mandats_actifs_organes/AMO10_deputes_actifs_mandats_actifs_organes.json.zip"
+          unzip -q /tmp/amo10.zip -d /tmp/amo10
+          grep -rl "PO847173" /tmp/amo10 || echo "PO847173 absent de AMO10"
+
+          echo "--- Recherche de PO847173 dans AMO50 (archive historique) ---"
+          mkdir -p /tmp/amo50
+          curl -s -o /tmp/amo50.zip "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/acteurs_mandats_organes_divises/AMO50_acteurs_mandats_organes_divises.json.zip"
+          unzip -q /tmp/amo50.zip -d /tmp/amo50
+          MATCHES=$(grep -rl "PO847173" /tmp/amo50 || true)
+          if [ -n "$MATCHES" ]; then
+            echo "Trouve dans AMO50:"
+            echo "$MATCHES"
+            echo "$MATCHES" | head -3 | xargs -I{} sh -c 'echo "--- {} ---"; cat {}'
+          else
+            echo "PO847173 absent de AMO50"
+          fi
+
+          echo "--- Contenu brut d une ligne de scrutin rejete (VTANR5L17V999) pour voir la structure ---"
+          mkdir -p /tmp/scrutins
+          curl -s -o /tmp/scrutins.zip "https://data.assemblee-nationale.fr/static/openData/repository/17/loi/scrutins/Scrutins.json.zip"
+          unzip -q /tmp/scrutins.zip -d /tmp/scrutins
+          SCRUTIN_FILE=$(find /tmp/scrutins -iname "*V999.json" | head -1)
+          echo "Fichier trouve: $SCRUTIN_FILE"
+          cat "$SCRUTIN_FILE" | node -e "
+          let data = '';
+          process.stdin.on('data', d => data += d);
+          process.stdin.on('end', () => {
+            const j = JSON.parse(data);
+            const groupes = j.scrutin.ventilationVotes.organe.groupes.groupe;
+            for (const g of groupes) {
+              console.log(JSON.stringify(g));
             }
-            return l;
           });
-          fs.writeFileSync('data/lois.json', JSON.stringify(data, null, 2) + String.fromCharCode(10));
-          console.log('Nettoyage: ' + count + ' entree(s) corrigee(s).');
           "
       - name: Récupérer les nouveaux scrutins de l'Assemblée nationale
         run: node scripts/fetch-scrutins.js
