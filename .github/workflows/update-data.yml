@@ -15,13 +15,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: DIAGNOSTIC temporaire - structure brute d'un scrutin
+      - name: DIAGNOSTIC temporaire - trouver le dataset des organes
         run: |
-          curl -sL -o /tmp/s.zip "https://data.assemblee-nationale.fr/static/openData/repository/17/loi/scrutins/Scrutins.json.zip"
-          mkdir -p /tmp/s && unzip -q -o /tmp/s.zip -d /tmp/s
-          F=$(find /tmp/s -name '*.json' -type f | sort | tail -1)
-          echo "=== FICHIER: $F ==="
-          cat "$F" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{console.log(JSON.stringify(JSON.parse(d), null, 2).slice(0, 6000))})"
+          for url in \
+            "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/organes/Organe.json.zip" \
+            "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/organes_divises/Organes.json.zip" \
+            "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/deputes_actifs_mandats_actifs_organes_divises/AMO10_deputes_actifs_mandats_actifs_organes_divises.json.zip" \
+            "https://data.assemblee-nationale.fr/static/openData/repository/17/organe/Organe.json.zip" \
+            "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/organes_acteurs/Organes.json.zip" \
+            "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/liste_organe_acteur/Organe.json.zip" \
+            ; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" -L "$url")
+            echo "$code  $url"
+          done
+          echo "--- listing repository/17/amo/ via index if possible ---"
+          curl -s "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/" | head -c 2000 || true
       - name: Récupérer les nouveaux scrutins de l'Assemblée nationale
         run: node scripts/fetch-scrutins.js
       - name: Récupérer les indicateurs INSEE
