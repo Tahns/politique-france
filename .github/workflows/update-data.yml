@@ -15,20 +15,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: DIAGNOSTIC temporaire - contenu complet du zip et catalogue
+      - name: DIAGNOSTIC temporaire - structure du dataset organes AMO50
         run: |
-          curl -sL -o /tmp/s.zip "https://data.assemblee-nationale.fr/static/openData/repository/17/loi/scrutins/Scrutins.json.zip"
-          mkdir -p /tmp/s && unzip -q -o /tmp/s.zip -d /tmp/s
-          echo "=== Arborescence complète (hors VTANR) ==="
-          find /tmp/s -type f | grep -v 'VTANR' | head -50
-          echo "=== Dossiers ==="
-          find /tmp/s -type d
-          echo "=== Total fichiers ==="
-          find /tmp/s -type f | wc -l
-          echo "=== Page catalogue AN (recherche liens organe/acteur) ==="
-          curl -sL "https://data.assemblee-nationale.fr/acteurs/deputes-en-exercice" | grep -oE 'href="[^"]*\.zip"' | sort -u | head -30
-          echo "=== Page catalogue AN generique ==="
-          curl -sL "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/deputes_actifs_mandats_actifs_organes_divises/" -o /dev/null -w "%{http_code}\n"
+          curl -sL -o /tmp/o.zip "https://data.assemblee-nationale.fr/static/openData/repository/17/amo/acteurs_mandats_organes_divises/AMO50_acteurs_mandats_organes_divises.json.zip"
+          mkdir -p /tmp/o && unzip -q -o /tmp/o.zip -d /tmp/o
+          echo "=== Dossiers de premier niveau ==="
+          find /tmp/o -maxdepth 3 -type d
+          echo "=== Comptage par dossier ==="
+          find /tmp/o -type d -exec sh -c 'echo "{}: $(find "{}" -maxdepth 1 -name "*.json" | wc -l)"' \;
+          echo "=== Exemple de fichier organe (recherche GP) ==="
+          F=$(grep -rl '"codeType":"GP"' /tmp/o/json/organe/ 2>/dev/null | head -1)
+          if [ -z "$F" ]; then F=$(find /tmp/o -ipath '*organe*' -name '*.json' | head -1); fi
+          echo "FILE: $F"
+          cat "$F" | head -c 3000
       - name: Récupérer les nouveaux scrutins de l'Assemblée nationale
         run: node scripts/fetch-scrutins.js
       - name: Récupérer les indicateurs INSEE
