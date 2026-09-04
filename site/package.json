@@ -1,0 +1,15 @@
+{
+  "name": "decrypter-politique-francaise",
+  "version": "1.0.0",
+  "description": "Site de transparence parlementaire — hémicycle interactif, dirigeants, justice, chiffres INSEE, sondages 2027.",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "fetch:scrutins": "node scripts/fetch-scrutins.js",
+    "fetch:insee": "node scripts/fetch-insee.js",
+    "serve": "python3 -m http.server 8000"
+  },
+  "license": "MIT"
+}

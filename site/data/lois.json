@@ -1,0 +1,215 @@
+{
+  "_comment": "Généré et mis à jour automatiquement par scripts/fetch-scrutins.js. Ne pas éditer les entrées 'source: auto' à la main.",
+  "lastUpdated": "2026-09-04T00:00:00Z",
+  "lois": [
+    {
+      "id": "loi-reel-bayrou",
+      "titre": "Vote de confiance au gouvernement Bayrou",
+      "date": "8 septembre 2025",
+      "resultat": "rejete",
+      "theme": "Institutions",
+      "reel": true,
+      "source": "manuel",
+      "sourceLabel": "LCP / Public Sénat",
+      "sourceUrl": "https://www.publicsenat.fr/actualites/politique/vote-de-confiance-lassemblee-nationale-se-prononce-contre-entrainant-la-chute-du-gouvernement-bayrou",
+      "proposePar": "Gouvernement Bayrou (engagement de responsabilité, art. 49 al.1)",
+      "groupeMoteur": "Rejeté par une coalition RN, LFI-NFP, Socialistes, Écologistes, GDR et LIOT — le gouvernement Bayrou a démissionné le jour même",
+      "votes": {
+        "RN": {
+          "pour": 0,
+          "contre": 124,
+          "abst": 0
+        },
+        "LFI": {
+          "pour": 0,
+          "contre": 71,
+          "abst": 0
+        },
+        "SOC": {
+          "pour": 0,
+          "contre": 66,
+          "abst": 0
+        },
+        "ECO": {
+          "pour": 0,
+          "contre": 38,
+          "abst": 0
+        },
+        "GDR": {
+          "pour": 0,
+          "contre": 17,
+          "abst": 0
+        },
+        "LIOT": {
+          "pour": 0,
+          "contre": 23,
+          "abst": 0
+        },
+        "EPR": {
+          "pour": 91,
+          "contre": 0,
+          "abst": 1
+        },
+        "DEM": {
+          "pour": 36,
+          "contre": 0,
+          "abst": 0
+        },
+        "HOR": {
+          "pour": 32,
+          "contre": 0,
+          "abst": 0
+        },
+        "LR": {
+          "pour": 27,
+          "contre": 13,
+          "abst": 9
+        },
+        "UDR": null,
+        "NI": null
+      }
+    },
+    {
+      "id": "loi-reel-censure-rn",
+      "titre": "Motion de censure RN/UDR contre le gouvernement Lecornu",
+      "date": "16 octobre 2025",
+      "resultat": "rejete",
+      "theme": "Institutions",
+      "reel": true,
+      "source": "manuel",
+      "sourceLabel": "Brut / LCP",
+      "sourceUrl": "https://www.brut.media/fr/articles/motions-de-censure-16-deputes-nont-pas-respecte-les-consignes-de-leur-parti",
+      "proposePar": "Rassemblement National et UDR (motion de censure, art. 49 al.2)",
+      "groupeMoteur": "Rejetée — 144 voix pour sur 289 nécessaires. Convention de vote : une motion de censure n'enregistre que les voix « pour » ; ne pas voter équivaut à ne pas censurer, donc à soutenir de fait le gouvernement (source : Datan)",
+      "votes": {
+        "RN": {
+          "pour": 124,
+          "contre": 0,
+          "abst": 0
+        },
+        "UDR": {
+          "pour": 16,
+          "contre": 0,
+          "abst": 0
+        },
+        "LR": {
+          "pour": 3,
+          "contre": 44,
+          "abst": 0
+        },
+        "NI": {
+          "pour": 2,
+          "contre": 13,
+          "abst": 0
+        },
+        "LFI": {
+          "pour": 0,
+          "contre": 71,
+          "abst": 0
+        },
+        "SOC": {
+          "pour": 0,
+          "contre": 66,
+          "abst": 0
+        },
+        "ECO": {
+          "pour": 0,
+          "contre": 38,
+          "abst": 0
+        },
+        "GDR": {
+          "pour": 0,
+          "contre": 17,
+          "abst": 0
+        },
+        "LIOT": {
+          "pour": 0,
+          "contre": 23,
+          "abst": 0
+        },
+        "EPR": {
+          "pour": 0,
+          "contre": 92,
+          "abst": 0
+        },
+        "DEM": {
+          "pour": 0,
+          "contre": 36,
+          "abst": 0
+        },
+        "HOR": {
+          "pour": 0,
+          "contre": 32,
+          "abst": 0
+        }
+      }
+    },
+    {
+      "id": "loi-reel-censure-lfi",
+      "titre": "Motion de censure LFI contre le gouvernement Lecornu",
+      "date": "16 octobre 2025",
+      "resultat": "rejete",
+      "theme": "Institutions",
+      "reel": true,
+      "source": "manuel",
+      "sourceLabel": "LCP / Public Sénat",
+      "sourceUrl": "https://lcp.fr/actualites/motions-de-censure-lfi-et-rn-rejetees-par-l-assemblee-nationale-qui-a-vote-quoi-409502",
+      "proposePar": "La France insoumise (motion de censure, art. 49 al.2)",
+      "groupeMoteur": "Rejetée — 271 voix pour sur 289 nécessaires (18 voix manquantes). Même convention de vote que pour la motion RN/UDR : ne pas voter équivaut à ne pas censurer",
+      "votes": {
+        "LFI": {
+          "pour": 71,
+          "contre": 0,
+          "abst": 0
+        },
+        "RN": {
+          "pour": 124,
+          "contre": 0,
+          "abst": 0
+        },
+        "UDR": {
+          "pour": 16,
+          "contre": 0,
+          "abst": 0
+        },
+        "ECO": {
+          "pour": 35,
+          "contre": 3,
+          "abst": 0
+        },
+        "GDR": {
+          "pour": 15,
+          "contre": 2,
+          "abst": 0
+        },
+        "SOC": {
+          "pour": 7,
+          "contre": 62,
+          "abst": 0
+        },
+        "LR": {
+          "pour": 1,
+          "contre": 49,
+          "abst": 0
+        },
+        "LIOT": {
+          "pour": 1,
+          "contre": 21,
+          "abst": 0
+        },
+        "DEM": {
+          "pour": 0,
+          "contre": 36,
+          "abst": 0
+        },
+        "HOR": {
+          "pour": 0,
+          "contre": 34,
+          "abst": 0
+        },
+        "EPR": null,
+        "NI": null
+      }
+    }
+  ]
+}

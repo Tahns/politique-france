@@ -1,0 +1,1957 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Décrypter la politique française</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBFBFA;
+    --bg-elevated:#FFFFFF;
+    --bg-elevated-2:#F4F4F2;
+    --border:#E4E3DE;
+    --border-soft:#EDECE7;
+    --text:#15161A;
+    --text-soft:#5B5D66;
+    --text-faint:#93949C;
+    --accent:#000091;
+    --accent-dim:rgba(0,0,145,.07);
+    --vert:#18753C;
+    --vert-dim:rgba(24,117,60,.09);
+    --rouge:#CE0500;
+    --rouge-dim:rgba(206,5,0,.08);
+    --ambre:#B34000;
+    --ambre-dim:rgba(179,64,0,.09);
+    --font-display:"Space Grotesk", -apple-system, sans-serif;
+    --font-body:"Inter", -apple-system, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  header{
+    padding:34px 24px 20px;
+    border-bottom:1px solid var(--border-soft);
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  header .eyebrow{
+    font-family:var(--font-body);
+    font-size:12.5px;
+    color:var(--accent);
+    font-weight:600;
+    letter-spacing:0.02em;
+  }
+  h1{
+    margin:0;
+    font-family:var(--font-display);
+    font-size:clamp(24px,4vw,34px);
+    font-weight:600;
+    letter-spacing:-0.01em;
+    color:var(--text);
+  }
+  header p{
+    margin:2px 0 0;
+    color:var(--text-soft);
+    font-size:14.5px;
+    max-width:560px;
+    line-height:1.5;
+  }
+
+  .tabs{
+    display:flex;
+    gap:4px;
+    margin:20px 24px 0;
+    border-bottom:1px solid var(--border-soft);
+  }
+  .tabs{
+    display:flex;
+    gap:4px;
+    border-bottom:1px solid var(--border-soft);
+  }
+  .tab{
+    padding:9px 14px;
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--text-faint);
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+    user-select:none;
+    transition:color .18s ease, border-color .18s ease;
+    white-space:nowrap;
+  }
+  .tab:hover{color:var(--text-soft);}
+  .tab.active{
+    color:var(--accent);
+    border-bottom-color:var(--accent);
+  }
+
+  .home-bar{
+    padding:16px 24px 0;
+  }
+  .top-bar{
+    display:flex; align-items:center; gap:10px;
+    padding:16px 24px 0;
+  }
+  .nav-toggle-anchor{
+    position:relative;
+  }
+  .nav-toggle{
+    display:inline-flex; align-items:center; gap:8px;
+    background:none; border:1px solid var(--border); border-radius:9px;
+    padding:9px 14px; font-family:var(--font-body); font-size:13px; font-weight:600;
+    color:var(--text-faint); cursor:pointer; transition:border-color .15s ease, color .15s ease;
+  }
+  .nav-toggle:hover{border-color:var(--text-faint); color:var(--text-soft);}
+  .nav-toggle .nav-toggle-current{color:var(--accent); font-weight:600;}
+  .nav-toggle .chevron{transition:transform .18s ease; font-size:11px; color:var(--text-faint);}
+  .nav-toggle[aria-expanded="true"] .chevron{transform:rotate(180deg);}
+  .nav-toggle[aria-expanded="true"]{border-color:var(--accent); color:var(--text);}
+
+  .nav-groups-wrap{
+    position:absolute;
+    top:calc(100% + 8px);
+    left:0;
+    z-index:30;
+    background:var(--bg-elevated);
+    border:1px solid var(--border);
+    border-radius:16px;
+    box-shadow:0 16px 40px rgba(20,20,15,.12);
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(-6px) scale(.98);
+    transform-origin:top left;
+    transition:opacity .16s ease, transform .16s ease, visibility .16s;
+  }
+  .nav-groups-wrap.open{
+    opacity:1;
+    visibility:visible;
+    transform:translateY(0) scale(1);
+  }
+  .nav-groups-wrap > nav{overflow:hidden;}
+
+  .nav-groups{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(220px,1fr));
+    gap:22px 40px;
+    padding:20px 24px;
+  }
+  @media(max-width:640px){ .nav-groups{grid-template-columns:1fr;} }
+  .nav-group{display:flex; flex-direction:column; gap:9px; min-width:0;}
+  .nav-group-label{
+    font-size:10.5px;
+    font-weight:700;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--accent);
+    padding-bottom:6px;
+    border-bottom:1px solid var(--border-soft);
+  }
+  .nav-group .tabs{border-bottom:none; flex-direction:column; align-items:flex-start; gap:2px;}
+  .nav-group .tab{
+    width:100%;
+    padding:7px 9px;
+    border-radius:7px;
+    border-bottom:none;
+  }
+  .nav-group .tab:hover{background:var(--bg-elevated-2); color:var(--text);}
+  .nav-group .tab.active{background:var(--accent-dim); color:var(--accent); border-bottom:none;}
+  .tab-home{
+    display:inline-flex;
+    background:var(--bg-elevated); border:1px solid var(--border);
+    border-radius:9px; border-bottom:1px solid var(--border) !important;
+    padding:9px 16px;
+  }
+  .tab-home.active{
+    background:var(--accent-dim); border-color:var(--accent);
+  }
+
+  main{padding:22px 24px 60px; max-width:1280px;}
+  .view{display:none;}
+  .view.active{
+    display:block;
+    animation:viewIn .28s ease both;
+  }
+  @keyframes viewIn{
+    from{opacity:0; transform:translateY(6px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .view.active{animation:none;}
+  }
+
+  /* --- Vue scrutin --- */
+  .scrutin-controls{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+  }
+  select, input[type="search"]{
+    font-size:14px;
+    padding:10px 13px;
+    border-radius:9px;
+    border:1px solid var(--border);
+    background:var(--bg-elevated);
+    color:var(--text);
+    max-width:100%;
+    font-family:var(--font-body);
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  input[type="search"]{
+    width:250px;
+  }
+  input[type="search"]::placeholder{color:var(--text-faint);}
+  input[type="search"]:focus, select:focus{
+    outline:none;
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px var(--accent-dim);
+  }
+  select:disabled{
+    color:var(--text-faint);
+    background:var(--bg-elevated-2);
+  }
+  select option{background:var(--bg-elevated); color:var(--text);}
+
+  .resultat-pill{
+    font-size:12.5px;
+    font-weight:700;
+    padding:6px 13px;
+    border-radius:99px;
+    letter-spacing:.01em;
+  }
+  .resultat-pill.pop{
+    animation:popIn .22s ease both;
+  }
+  @keyframes popIn{
+    from{opacity:0; transform:scale(.85);}
+    to{opacity:1; transform:scale(1);}
+  }
+  .resultat-pill.adopte{background:var(--vert-dim);color:var(--vert);}
+  .resultat-pill.rejete{background:var(--rouge-dim);color:var(--rouge);}
+
+  .hemicycle-wrap{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:20px;
+  }
+  @media(min-width:880px){
+    .hemicycle-wrap{grid-template-columns:1.5fr 1fr;}
+  }
+
+  .hemi-card{
+    background:var(--bg-elevated);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:18px;
+    position:relative;
+  }
+  svg{width:100%;height:auto;display:block;}
+  .siege{
+    cursor:pointer;
+    stroke:var(--bg-elevated);
+    stroke-width:0.6;
+    transition:opacity .18s ease, stroke-width .15s ease, filter .15s ease;
+    pointer-events:none;
+  }
+  .siege.dim{opacity:.42;}
+  .siege.hovered{
+    stroke:var(--text);
+    stroke-width:1.4;
+    filter:drop-shadow(0 0 5px currentColor);
+  }
+  .siege-hit{
+    fill:transparent;
+    cursor:pointer;
+  }
+  @media (prefers-reduced-motion:reduce){
+    .siege{transition:none;}
+  }
+
+  .tooltip{
+    position:absolute;
+    pointer-events:none;
+    background:#1D2231;
+    color:#F0EEE6;
+    border:1px solid #2C3242;
+    padding:10px 13px;
+    border-radius:9px;
+    font-size:13px;
+    line-height:1.5;
+    white-space:nowrap;
+    z-index:5;
+    box-shadow:0 12px 28px rgba(0,0,0,.22);
+    opacity:0;
+    transform:translate(-50%,-105%);
+    transition:opacity .12s ease, transform .12s ease;
+  }
+  .tooltip.visible{
+    opacity:1;
+    transform:translate(-50%,-115%);
+  }
+  .tooltip b{display:block;font-size:13.5px;margin-bottom:3px;font-family:var(--font-display);}
+  .tooltip .vote-pour{color:#7FDB9E;}
+  .tooltip .vote-contre{color:#FF9B95;}
+  .tooltip .vote-abst{color:#B7BAC4;}
+
+  .breakdown{
+    background:var(--bg-elevated);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:20px;
+  }
+  .breakdown h3{margin:0 0 14px;font-size:14.5px;font-weight:600;color:var(--text-soft);}
+  .loi-provenance{
+    display:flex; flex-direction:column; gap:8px;
+    padding-bottom:14px; margin-bottom:14px;
+    border-bottom:1px solid var(--border-soft);
+    font-size:12.5px;
+  }
+  .loi-provenance-row{display:flex; gap:6px;}
+  .loi-provenance-row .label{color:var(--text-faint); flex-shrink:0; min-width:118px;}
+  .loi-provenance-row .value{color:var(--text-soft); font-weight:600;}
+  .loi-provenance-row .value b{color:var(--text);}
+  .loi-contexte-alert{
+    display:inline-block; margin-top:4px;
+    font-size:11.5px; font-weight:700; color:var(--ambre);
+    background:var(--ambre-dim); border:1px solid rgba(255,182,72,.3);
+    padding:4px 11px; border-radius:99px;
+  }
+  .party-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:8px 0;
+    border-bottom:1px solid var(--border-soft);
+    font-size:13.5px;
+    animation:rowIn .25s ease both;
+  }
+  .party-row:last-child{border-bottom:none;}
+  .dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+  .party-name{flex:1;font-weight:600;color:var(--text);}
+  .party-votes{display:flex;gap:10px;color:var(--text-faint);font-variant-numeric:tabular-nums;font-size:12.5px;}
+  .party-votes span b{color:var(--text-soft);font-weight:600;}
+
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 16px;
+    margin-top:18px;
+    padding-top:16px;
+    border-top:1px solid var(--border-soft);
+    font-size:12px;
+    color:var(--text-faint);
+  }
+  .legend-item{display:flex;align-items:center;gap:6px;}
+
+  /* --- Vue historique --- */
+  .party-select-bar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:20px;
+  }
+  .party-chip{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    padding:8px 14px;
+    border-radius:99px;
+    border:1.5px solid var(--border);
+    background:var(--bg-elevated);
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    color:var(--text-soft);
+    transition:border-color .15s ease, color .15s ease, background .15s ease, transform .12s ease;
+  }
+  .party-chip:hover{border-color:var(--text-faint);}
+  .party-chip:active{transform:scale(.96);}
+  .party-chip.selected{
+    border-color:var(--accent);
+    color:var(--text);
+    background:var(--accent-dim);
+  }
+  .party-chip .dot{width:9px;height:9px;}
+
+  .histo-title{font-size:14.5px;font-weight:600;margin:0 0 14px;color:var(--text-soft);}
+
+  .histo-row{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:6px 14px;
+    align-items:center;
+    padding:14px 0;
+    border-bottom:1px solid var(--border-soft);
+    animation:rowIn .25s ease both;
+  }
+  @keyframes rowIn{
+    from{opacity:0; transform:translateY(4px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .party-row, .histo-row, .resultat-pill{animation:none;}
+  }
+  .histo-loi{font-size:14px;font-weight:600;color:var(--text);}
+  .histo-date{font-size:12px;color:var(--text-faint);margin-top:2px;}
+  .histo-bar{
+    grid-column:1 / -1;
+    display:flex;
+    height:7px;
+    border-radius:99px;
+    overflow:hidden;
+    background:var(--border-soft);
+  }
+  .histo-bar div{
+    transition:width .35s ease;
+  }
+  .histo-vote-tag{
+    font-size:11.5px;
+    font-weight:700;
+    padding:4px 11px;
+    border-radius:99px;
+    white-space:nowrap;
+  }
+  .tag-pour{background:var(--vert-dim);color:var(--vert);}
+  .tag-contre{background:var(--rouge-dim);color:var(--rouge);}
+  .tag-partage{background:var(--ambre-dim);color:var(--ambre);}
+
+  /* --- Bandeau d'avertissement données fictives --- */
+  .fictional-banner{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    background:var(--ambre-dim);
+    border:1px solid rgba(255,182,72,.3);
+    color:var(--ambre);
+    font-size:13px;
+    line-height:1.5;
+    padding:12px 16px;
+    border-radius:10px;
+    margin-bottom:22px;
+  }
+  .fictional-banner b{color:var(--ambre);}
+
+  /* --- Vue meetings --- */
+  .meeting-list{display:flex; flex-direction:column; gap:12px;}
+  .meeting-card{
+    background:var(--bg-elevated);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:16px 18px;
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:14px;
+    align-items:start;
+    animation:rowIn .25s ease both;
+  }
+  .meeting-card.placeholder{opacity:.6; border-style:dashed;}
+  .meeting-date-badge{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    background:var(--bg-elevated-2);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:8px 14px;
+    min-width:64px;
+    text-align:center;
+  }
+  .meeting-date-badge .jour{font-family:var(--font-display); font-size:20px; font-weight:600; color:var(--accent); line-height:1;}
+  .meeting-date-badge .mois{font-size:11px; color:var(--text-faint); text-transform:uppercase; margin-top:2px;}
+  .meeting-body h4{margin:0 0 4px; font-size:15px; font-weight:600; color:var(--text);}
+  .meeting-meta{font-size:12.5px; color:var(--text-soft); margin-bottom:6px;}
+  .meeting-meta .dot-inline{display:inline-block; width:7px; height:7px; border-radius:2px; margin-right:5px; vertical-align:middle;}
+  .meeting-desc{font-size:13.5px; color:var(--text-soft); line-height:1.5; margin-bottom:6px;}
+  .meeting-source{font-size:12px; color:var(--text-faint);}
+  .meeting-source a{color:var(--accent); text-decoration:none;}
+  .meeting-source a:hover{text-decoration:underline;}
+  .verified-badge{
+    display:inline-flex; align-items:center; gap:4px;
+    font-size:11px; font-weight:700; color:var(--vert);
+    background:var(--vert-dim); padding:2px 9px; border-radius:99px;
+    margin-left:8px;
+  }
+
+  /* --- Vue sondages --- */
+  .source-bar{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .source-chip{
+    display:flex; align-items:center; gap:7px;
+    padding:8px 14px; border-radius:99px;
+    border:1.5px solid var(--border); background:var(--bg-elevated);
+    font-size:13px; font-weight:600; cursor:pointer; color:var(--text-faint);
+    transition:border-color .15s ease, color .15s ease, background .15s ease;
+  }
+  .source-chip.selected{border-color:var(--accent); color:var(--text); background:var(--accent-dim);}
+  .source-chip .check{width:14px; height:14px; border-radius:4px; border:1.5px solid var(--text-faint); display:flex; align-items:center; justify-content:center; font-size:10px;}
+  .source-chip.selected .check{background:var(--accent); border-color:var(--accent); color:var(--bg);}
+
+  .sondage-avg-card{
+    background:var(--bg-elevated); border:1px solid var(--border); border-radius:16px;
+    padding:22px; margin-bottom:24px;
+  }
+  .sondage-avg-card h3{margin:0 0 4px; font-size:15px; font-weight:600;}
+  .sondage-avg-sub{font-size:12.5px; color:var(--text-faint); margin-bottom:18px;}
+  .sondage-bar-row{display:flex; align-items:center; gap:12px; padding:7px 0;}
+  .sondage-bar-row .bloc-name{width:150px; flex-shrink:0; font-size:13px; font-weight:600;}
+  .sondage-bar-track{flex:1; height:20px; background:var(--border-soft); border-radius:6px; overflow:hidden;}
+  .sondage-bar-fill{height:100%; border-radius:6px; transition:width .4s ease;}
+  .sondage-bar-pct{width:44px; text-align:right; font-variant-numeric:tabular-nums; font-size:13px; font-weight:700; color:var(--text);}
+
+  .sondage-list-title{font-size:14.5px; font-weight:600; color:var(--text-soft); margin:0 0 12px;}
+  .sondage-entry{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:11px 0; border-bottom:1px solid var(--border-soft);
+    font-size:13px; animation:rowIn .25s ease both;
+  }
+  .sondage-entry .institut-nom{font-weight:600; color:var(--text);}
+  .sondage-entry .sondage-date{color:var(--text-faint); font-size:12px; margin-left:8px;}
+  .sondage-entry .sondage-leader{color:var(--text-soft);}
+
+  /* --- Filtre par thème --- */
+  .theme-filter-bar{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;}
+  .theme-chip{
+    padding:6px 13px; border-radius:99px; border:1.5px solid var(--border);
+    background:var(--bg-elevated); font-size:12.5px; font-weight:600;
+    cursor:pointer; color:var(--text-faint);
+    transition:border-color .15s ease, color .15s ease, background .15s ease;
+  }
+  .theme-chip.selected{border-color:var(--accent); color:var(--text); background:var(--accent-dim);}
+  .loi-theme-tag{
+    display:inline-block; font-size:11px; font-weight:700; color:var(--text-faint);
+    background:var(--bg-elevated-2); border:1px solid var(--border);
+    padding:2px 9px; border-radius:99px; margin-left:8px; vertical-align:middle;
+  }
+  .loi-source-badge{
+    display:inline-block; font-size:11px; font-weight:700;
+    padding:2px 10px; border-radius:99px; margin-right:6px; vertical-align:middle;
+  }
+  .loi-source-badge.reel{background:var(--vert-dim); color:var(--vert);}
+  .loi-source-badge.exemple{background:var(--ambre-dim); color:var(--ambre);}
+  .vote-nd{color:var(--text-faint); font-style:italic; font-size:12px;}
+
+  /* --- Indicateurs clés --- */
+  .stat-cards{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:12px; margin-bottom:20px;
+  }
+  .stat-card{
+    background:var(--bg-elevated); border:1px solid var(--border); border-radius:12px;
+    padding:14px 16px;
+  }
+  .stat-card .stat-label{font-size:11.5px; color:var(--text-faint); margin-bottom:6px;}
+  .stat-card .stat-value{font-family:var(--font-display); font-size:20px; font-weight:600; color:var(--text);}
+  .stat-card .stat-value.accent{color:var(--accent);}
+  .stat-card .stat-sub{font-size:11.5px; color:var(--text-soft); margin-top:2px;}
+
+  /* --- Quiz d'affinité --- */
+  .quiz-card{
+    background:var(--bg-elevated); border:1px solid var(--border); border-radius:16px;
+    padding:20px 22px; margin-bottom:14px;
+  }
+  .quiz-question{font-size:14.5px; font-weight:600; color:var(--text); margin-bottom:12px;}
+  .quiz-options{display:flex; gap:8px; flex-wrap:wrap;}
+  .quiz-option{
+    padding:9px 16px; border-radius:9px; border:1.5px solid var(--border);
+    background:var(--bg-elevated-2); font-size:13px; font-weight:600;
+    cursor:pointer; color:var(--text-soft);
+    transition:border-color .15s ease, color .15s ease, background .15s ease;
+  }
+  .quiz-option:hover{border-color:var(--text-faint);}
+  .quiz-option.picked-pour{border-color:var(--vert); color:var(--vert); background:var(--vert-dim);}
+  .quiz-option.picked-contre{border-color:var(--rouge); color:var(--rouge); background:var(--rouge-dim);}
+  .quiz-option.picked-abst{border-color:var(--ambre); color:var(--ambre); background:var(--ambre-dim);}
+  .quiz-progress{font-size:12.5px; color:var(--text-faint); margin-bottom:16px;}
+  .quiz-cta{
+    margin-top:8px; padding:11px 20px; border-radius:9px; border:none;
+    background:var(--accent); color:#FFFFFF; font-weight:700; font-size:13.5px;
+    cursor:pointer; transition:opacity .15s ease;
+  }
+  .quiz-cta:disabled{opacity:.35; cursor:not-allowed;}
+  .quiz-cta:not(:disabled):hover{opacity:.88;}
+  .quiz-result-row{
+    display:flex; align-items:center; gap:12px; padding:10px 0;
+    border-bottom:1px solid var(--border-soft); animation:rowIn .25s ease both;
+  }
+  .quiz-result-rank{font-family:var(--font-display); font-size:16px; color:var(--text-faint); width:22px;}
+  .quiz-result-name{flex:1; font-size:13.5px; font-weight:600;}
+  .quiz-result-track{width:120px; height:8px; background:var(--border-soft); border-radius:99px; overflow:hidden;}
+  .quiz-result-fill{height:100%; transition:width .5s ease;}
+  .quiz-result-pct{width:40px; text-align:right; font-size:13px; font-weight:700; font-variant-numeric:tabular-nums;}
+  .quiz-restart{
+    margin-top:16px; background:none; border:1px solid var(--border); color:var(--text-soft);
+    padding:8px 16px; border-radius:9px; font-size:13px; cursor:pointer;
+  }
+  .quiz-restart:hover{border-color:var(--text-faint); color:var(--text);}
+
+  /* --- Dirigeants des partis --- */
+  .leader-grid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+    gap:14px;
+  }
+  .leader-card{
+    background:var(--bg-elevated); border:1px solid var(--border); border-radius:14px;
+    padding:18px; display:flex; gap:14px; align-items:flex-start;
+    animation:rowIn .25s ease both;
+  }
+  .leader-avatar{
+    width:48px; height:48px; border-radius:12px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-display); font-weight:700; font-size:16px;
+    color:#FFFFFF;
+  }
+  .leader-info .leader-name{font-size:14.5px; font-weight:700; color:var(--text); margin-bottom:2px;}
+  .leader-info .leader-role{font-size:12px; color:var(--text-soft); margin-bottom:6px;}
+  .leader-info .leader-party{
+    display:inline-flex; align-items:center; gap:5px;
+    font-size:11px; font-weight:700; color:var(--text-faint);
+    background:var(--bg-elevated-2); border:1px solid var(--border);
+    padding:2px 9px; border-radius:99px;
+  }
+
+  /* --- Chiffres clés France --- */
+  .chiffre-search{margin-bottom:18px;}
+  .chiffre-grid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:14px; margin-bottom:8px;
+  }
+  .chiffre-card{
+    background:var(--bg-elevated); border:1px solid var(--border); border-radius:14px;
+    padding:18px; animation:rowIn .25s ease both;
+  }
+  .chiffre-card .chiffre-label{font-size:12px; color:var(--text-faint); margin-bottom:8px;}
+  .chiffre-card .chiffre-value{font-family:var(--font-display); font-size:26px; font-weight:600; color:var(--text);}
+  .chiffre-card .chiffre-value.up{color:var(--rouge);}
+  .chiffre-card .chiffre-value.down{color:var(--vert);}
+  .chiffre-card .chiffre-sub{font-size:11.5px; color:var(--text-soft); margin-top:6px; line-height:1.5;}
+  .chiffre-card .chiffre-source{
+    font-size:11px; color:var(--text-faint); margin-top:10px;
+    padding-top:10px; border-top:1px solid var(--border-soft);
+  }
+  .chiffre-card .chiffre-source a{color:var(--accent); text-decoration:none;}
+  .chiffre-card .chiffre-source a:hover{text-decoration:underline;}
+  .no-result-msg{color:var(--text-faint); font-size:14px; padding:20px 0;}
+
+  /* --- Jauges budget/dette --- */
+  .budget-hero{
+    background:var(--bg-elevated); border:1px solid var(--border); border-radius:16px;
+    padding:22px; margin-bottom:20px;
+    display:grid; grid-template-columns:1fr; gap:20px;
+  }
+  @media(min-width:700px){ .budget-hero{grid-template-columns:1fr 1fr;} }
+  .budget-hero h3{margin:0 0 2px; font-size:15px; font-weight:600;}
+  .budget-hero-sub{font-size:11.5px; color:var(--text-faint); margin-bottom:16px;}
+  .gauge-block{display:flex; align-items:center; gap:16px;}
+  .gauge-svg{width:120px; height:120px; flex-shrink:0;}
+  .gauge-label{font-size:12.5px; color:var(--text-soft); margin-bottom:4px;}
+  .gauge-value{font-family:var(--font-display); font-size:22px; font-weight:600; color:var(--text);}
+  .gauge-note{font-size:11.5px; color:var(--text-faint); margin-top:4px; line-height:1.5;}
+
+  /* --- Justice & politique --- */
+  .justice-summary{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+    gap:10px; margin-bottom:20px;
+  }
+  .justice-summary-card{
+    background:var(--bg-elevated); border:1px solid var(--border); border-radius:12px;
+    padding:12px 14px; text-align:center;
+  }
+  .justice-summary-card .n{font-family:var(--font-display); font-size:22px; font-weight:600; color:var(--text);}
+  .justice-summary-card .p{font-size:11px; color:var(--text-faint); margin-top:2px;}
+  .justice-filter-bar{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px;}
+  .justice-card{
+    background:var(--bg-elevated); border:1px solid var(--border); border-radius:14px;
+    padding:18px 20px; margin-bottom:12px; animation:rowIn .25s ease both;
+  }
+  .justice-card-head{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:8px;}
+  .justice-name{font-size:15px; font-weight:700; color:var(--text);}
+  .justice-role{font-size:12.5px; color:var(--text-faint);}
+  .justice-status{
+    font-size:11px; font-weight:700; padding:3px 11px; border-radius:99px; margin-left:auto;
+  }
+  .justice-status.definitif{background:var(--rouge-dim); color:var(--rouge);}
+  .justice-status.appel{background:var(--ambre-dim); color:var(--ambre);}
+  .justice-affaire{font-size:13px; font-weight:600; color:var(--text-soft); margin-bottom:4px;}
+  .justice-detail{font-size:13px; color:var(--text-soft); line-height:1.55; margin-bottom:8px;}
+  .justice-meta{font-size:11.5px; color:var(--text-faint);}
+  .justice-meta a{color:var(--accent); text-decoration:none;}
+  .justice-meta a:hover{text-decoration:underline;}
+
+  /* --- Accueil --- */
+  .accueil-hero-stats{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:12px; margin-bottom:28px;
+  }
+  .accueil-hero-stat{
+    background:var(--bg-elevated); border:1px solid var(--border); border-radius:12px;
+    padding:14px 16px; text-align:center;
+  }
+  .accueil-hero-stat .v{font-family:var(--font-display); font-size:20px; font-weight:600; color:var(--accent);}
+  .accueil-hero-stat .l{font-size:11px; color:var(--text-faint); margin-top:3px;}
+
+  .accueil-section-title{
+    font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--text-faint); margin:28px 0 12px;
+  }
+  .accueil-section-title:first-of-type{margin-top:0;}
+
+  .accueil-highlight-grid{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:14px; margin-bottom:8px;
+  }
+  .accueil-highlight-card{
+    background:var(--bg-elevated); border:1px solid var(--border); border-radius:14px;
+    padding:18px 20px; cursor:pointer; transition:border-color .15s ease, transform .12s ease;
+  }
+  .accueil-highlight-card:hover{border-color:var(--accent);}
+  .accueil-highlight-card:active{transform:scale(.99);}
+  .accueil-highlight-eyebrow{font-size:11px; color:var(--accent); font-weight:700; margin-bottom:6px;}
+  .accueil-highlight-title{font-size:14.5px; font-weight:700; color:var(--text); margin-bottom:6px; line-height:1.4;}
+  .accueil-highlight-sub{font-size:12.5px; color:var(--text-soft); line-height:1.5;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Décrypter la politique française</h1>
+  <p>Votes à l'Assemblée, dirigeants des partis, leurs affaires judiciaires, sondages 2027 et chiffres clés du pays — chaque donnée est datée et sourcée.</p>
+</header>
+
+<div class="top-bar">
+  <div class="tab tab-home active" data-tab="accueil">🏠 Accueil</div>
+  <div class="nav-toggle-anchor">
+    <button class="nav-toggle" id="nav-toggle" aria-expanded="false">
+      <span>Catégories</span>
+      <span class="nav-toggle-current" id="nav-toggle-current"></span>
+      <span class="chevron">⌄</span>
+    </button>
+
+    <div class="nav-groups-wrap" id="nav-groups-wrap">
+    <nav class="nav-groups">
+  <div class="nav-group">
+    <div class="nav-group-label">Assemblée</div>
+    <div class="tabs">
+      <div class="tab" data-tab="scrutin">Hémicycle par loi</div>
+      <div class="tab" data-tab="histo">Historique par parti</div>
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Partis &amp; personnalités</div>
+    <div class="tabs">
+      <div class="tab" data-tab="dirigeants">Dirigeants</div>
+      <div class="tab" data-tab="justice">Justice &amp; politique</div>
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Présidentielle 2027</div>
+    <div class="tabs">
+      <div class="tab" data-tab="sondages">Sondages</div>
+      <div class="tab" data-tab="meetings">Prochains meetings</div>
+      <div class="tab" data-tab="quiz">Testez vos affinités</div>
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Chiffres de la France</div>
+    <div class="tabs">
+      <div class="tab" data-tab="chiffres">Chiffres clés</div>
+    </div>
+  </div>
+</nav>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="view active" id="view-accueil">
+    <div class="accueil-hero-stats" id="accueil-hero-stats"></div>
+
+    <div class="accueil-section-title">À la une</div>
+    <div class="accueil-highlight-grid" id="accueil-highlight-grid"></div>
+  </section>
+
+  <section class="view" id="view-scrutin">
+    <div class="fictional-banner" style="background:var(--vert-dim); border-color:rgba(53,208,127,.3); color:var(--vert);">
+      ✓ <span><b>100% de votes réels et sourcés.</b> Seulement 2 scrutins pour l'instant — j'ai volontairement retiré les exemples fictifs plutôt que de les garder avec un label. D'autres votes réels seront ajoutés au fil des recherches, avec toujours une source vérifiable en lien.</span>
+    </div>
+    <div class="theme-filter-bar" id="theme-filter-bar"></div>
+    <div class="scrutin-controls">
+      <input type="search" id="loi-search" placeholder="Rechercher une loi (mot-clé)…" />
+      <select id="loi-select"></select>
+      <span class="resultat-pill" id="resultat-pill"></span>
+    </div>
+
+    <div class="stat-cards" id="stat-cards"></div>
+
+    <div class="hemicycle-wrap">
+      <div class="hemi-card">
+        <svg id="hemicycle" viewBox="0 0 1000 560"></svg>
+        <div class="legend" id="legend"></div>
+      </div>
+
+      <div class="breakdown">
+        <h3 id="breakdown-title">Répartition des votes</h3>
+        <div id="loi-provenance"></div>
+        <div id="breakdown-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-histo">
+    <div class="party-select-bar" id="party-select-bar"></div>
+    <div class="scrutin-controls">
+      <input type="search" id="histo-search" placeholder="Rechercher une loi dans l'historique…" />
+    </div>
+    <h3 class="histo-title" id="histo-party-title"></h3>
+    <div id="histo-list"></div>
+  </section>
+
+  <section class="view" id="view-dirigeants">
+    <div class="fictional-banner" style="background:var(--vert-dim); border-color:rgba(53,208,127,.3); color:var(--vert);">
+      ✓ <span><b>Données réelles</b>, vérifiées début septembre 2026. Un parti sans dirigeant national identifié (LIOT, UDR) est indiqué comme tel — ce sont des coalitions/groupes sans chef de parti unique.</span>
+    </div>
+    <div class="leader-grid" id="leader-grid"></div>
+  </section>
+
+  <section class="view" id="view-chiffres">
+    <div class="fictional-banner" style="background:var(--vert-dim); border-color:rgba(53,208,127,.3); color:var(--vert);">
+      ✓ <span><b>Données réelles INSEE</b> (sauf mention contraire), avec date de publication et lien source pour chaque chiffre.</span>
+    </div>
+    <input type="search" class="chiffre-search" id="chiffre-search" placeholder="Rechercher un indicateur (ex : chômage, dette, inflation)…" style="width:320px;" />
+
+    <div class="budget-hero" id="budget-hero"></div>
+
+    <div class="chiffre-grid" id="chiffre-grid"></div>
+  </section>
+
+  <section class="view" id="view-meetings">
+    <div class="fictional-banner" style="background:var(--vert-dim); border-color:rgba(53,208,127,.3); color:var(--vert);">
+      ✓ <span><b>100% d'événements réels et sourcés.</b> Liste manuelle pour l'instant — à terme, alimentée automatiquement par les agendas officiels des partis et de l'Assemblée nationale.</span>
+    </div>
+    <div class="meeting-list" id="meeting-list"></div>
+  </section>
+
+  <section class="view" id="view-justice">
+    <div class="fictional-banner" style="background:var(--vert-dim); border-color:rgba(53,208,127,.3); color:var(--vert);">
+      ✓ <span><b>Faits établis uniquement.</b> Cette liste ne contient que des condamnations effectivement prononcées par un tribunal, avec la mention explicite du statut (définitive, ou en appel/cassation donc non-définitive). Elle ne contient aucune plainte non jugée ni accusation — présenter une plainte comme une culpabilité serait diffamatoire et trompeur. Vérifié début septembre 2026.</span>
+    </div>
+    <div class="justice-summary" id="justice-summary"></div>
+    <div class="justice-filter-bar" id="justice-filter-bar"></div>
+    <div id="justice-list"></div>
+  </section>
+
+  <section class="view" id="view-sondages">
+    <div class="fictional-banner" style="background:var(--vert-dim); border-color:rgba(53,208,127,.3); color:var(--vert);">
+      ✓ <span><b>Sondages réels, non moyennés.</b> Chaque institut publie ses propres chiffres avec sa propre méthode — plutôt que d'inventer une moyenne, choisis un institut pour voir exactement ce qu'il a publié, fourchette comprise.</span>
+    </div>
+    <div class="source-bar" id="source-bar"></div>
+    <div class="sondage-avg-card">
+      <h3 id="sondage-institut-title">Intentions de vote — 1er tour, présidentielle 2027</h3>
+      <div class="sondage-avg-sub" id="sondage-avg-sub"></div>
+      <div id="sondage-avg-list"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-quiz">
+    <div class="fictional-banner" style="background:var(--vert-dim); border-color:rgba(53,208,127,.3); color:var(--vert);">
+      ✓ <span><b>Basé sur les 2 votes réels du site.</b> Encore peu de questions car on n'a intégré que des scrutins vérifiés — le quiz s'enrichira au fur et à mesure que d'autres votes réels seront ajoutés.</span>
+    </div>
+    <div id="quiz-container"></div>
+  </section>
+</main>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+/* ---------- Données fictives ---------- */
+
+const PARTIES = [
+  { id:"LFI",  nom:"LFI-NFP",              couleur:"#D6284B", sieges:71 },
+  { id:"GDR",  nom:"GDR (communistes)",    couleur:"#A32E22", sieges:17 },
+  { id:"ECO",  nom:"Écologiste et Social", couleur:"#1E9F58", sieges:38 },
+  { id:"SOC",  nom:"Socialistes",          couleur:"#D6488A", sieges:66 },
+  { id:"LIOT", nom:"LIOT",                 couleur:"#A67C0A", sieges:23 },
+  { id:"EPR",  nom:"Ensemble pour la République", couleur:"#E0B400", sieges:92 },
+  { id:"DEM",  nom:"Démocrate (MoDem)",    couleur:"#E08800", sieges:36 },
+  { id:"HOR",  nom:"Horizons",             couleur:"#0FA89C", sieges:32 },
+  { id:"LR",   nom:"Droite Républicaine",  couleur:"#2F6FE0", sieges:47 },
+  { id:"UDR",  nom:"UDR",                  couleur:"#1E44B0", sieges:16 },
+  { id:"RN",   nom:"Rassemblement National", couleur:"#5B4FC9", sieges:124 },
+  { id:"NI",   nom:"Non-inscrits",         couleur:"#6B6E78", sieges:15 },
+];
+
+const TOTAL_SIEGES = PARTIES.reduce((s,p)=>s+p.sieges,0); // 577
+
+// LOIS : valeurs de secours intégrées (pour que le fichier s'affiche correctement en
+// prévisualisation directe, sans serveur) — écrasées par data/lois.json si ce fichier
+// est accessible (site déployé avec le pipeline d'automatisation), voir loadExternalData().
+let LOIS = [
+  {
+    id:"loi-reel-bayrou", titre:"Vote de confiance au gouvernement Bayrou",
+    date:"8 septembre 2025", resultat:"rejete", theme:"Institutions",
+    reel:true,
+    sourceLabel:"LCP / Public Sénat", sourceUrl:"https://www.publicsenat.fr/actualites/politique/vote-de-confiance-lassemblee-nationale-se-prononce-contre-entrainant-la-chute-du-gouvernement-bayrou",
+    proposePar:"Gouvernement Bayrou (engagement de responsabilité, art. 49 al.1)",
+    groupeMoteur:"Rejeté par une coalition RN, LFI-NFP, Socialistes, Écologistes, GDR et LIOT — le gouvernement Bayrou a démissionné le jour même",
+    votes:{
+      RN: {pour:0, contre:124, abst:0},
+      LFI: {pour:0, contre:71, abst:0},
+      SOC: {pour:0, contre:66, abst:0},
+      ECO: {pour:0, contre:38, abst:0},
+      GDR: {pour:0, contre:17, abst:0},
+      LIOT: {pour:0, contre:23, abst:0},
+      EPR: {pour:91, contre:0, abst:1},
+      DEM: {pour:36, contre:0, abst:0},
+      HOR: {pour:32, contre:0, abst:0},
+      LR: {pour:27, contre:13, abst:9},
+      UDR: null,
+      NI: null,
+    }
+  },
+  {
+    id:"loi-reel-censure-rn", titre:"Motion de censure RN/UDR contre le gouvernement Lecornu",
+    date:"16 octobre 2025", resultat:"rejete", theme:"Institutions",
+    reel:true,
+    sourceLabel:"Brut / LCP", sourceUrl:"https://www.brut.media/fr/articles/motions-de-censure-16-deputes-nont-pas-respecte-les-consignes-de-leur-parti",
+    proposePar:"Rassemblement National et UDR (motion de censure, art. 49 al.2)",
+    groupeMoteur:"Rejetée — 144 voix pour sur 289 nécessaires. Convention de vote : une motion de censure n'enregistre que les voix « pour » ; ne pas voter équivaut à ne pas censurer, donc à soutenir de fait le gouvernement (source : Datan)",
+    votes:{
+      RN: {pour:124, contre:0, abst:0},
+      UDR: {pour:16, contre:0, abst:0},
+      LR: {pour:3, contre:44, abst:0},
+      NI: {pour:2, contre:13, abst:0},
+      LFI: {pour:0, contre:71, abst:0},
+      SOC: {pour:0, contre:66, abst:0},
+      ECO: {pour:0, contre:38, abst:0},
+      GDR: {pour:0, contre:17, abst:0},
+      LIOT: {pour:0, contre:23, abst:0},
+      EPR: {pour:0, contre:92, abst:0},
+      DEM: {pour:0, contre:36, abst:0},
+      HOR: {pour:0, contre:32, abst:0},
+    }
+  },
+  {
+    id:"loi-reel-censure-lfi", titre:"Motion de censure LFI contre le gouvernement Lecornu",
+    date:"16 octobre 2025", resultat:"rejete", theme:"Institutions",
+    reel:true,
+    sourceLabel:"LCP / Public Sénat", sourceUrl:"https://lcp.fr/actualites/motions-de-censure-lfi-et-rn-rejetees-par-l-assemblee-nationale-qui-a-vote-quoi-409502",
+    proposePar:"La France insoumise (motion de censure, art. 49 al.2)",
+    groupeMoteur:"Rejetée — 271 voix pour sur 289 nécessaires (18 voix manquantes). Même convention de vote que pour la motion RN/UDR : ne pas voter équivaut à ne pas censurer",
+    votes:{
+      LFI: {pour:71, contre:0, abst:0},
+      RN: {pour:124, contre:0, abst:0},
+      UDR: {pour:16, contre:0, abst:0},
+      ECO: {pour:35, contre:3, abst:0},
+      GDR: {pour:15, contre:2, abst:0},
+      SOC: {pour:7, contre:62, abst:0},
+      LR: {pour:1, contre:49, abst:0},
+      LIOT: {pour:1, contre:21, abst:0},
+      DEM: {pour:0, contre:36, abst:0},
+      HOR: {pour:0, contre:34, abst:0},
+      EPR: null,
+      NI: null,
+    }
+  },
+];
+
+
+/* ---------- Génération de l'hémicycle ---------- */
+
+const svg = document.getElementById("hemicycle");
+const CX = 500, CY = 520;
+const R_MIN = 90, R_MAX = 470;
+const N_ROWS = 11;
+
+let seatNodes = [];
+
+function buildSeats(){
+  const radii = [];
+  for(let i=0;i<N_ROWS;i++){
+    radii.push(R_MIN + (R_MAX-R_MIN) * (i/(N_ROWS-1)));
+  }
+  const totalRadius = radii.reduce((a,b)=>a+b,0);
+  let seatsPerRow = radii.map(r => Math.round(TOTAL_SIEGES * r/totalRadius));
+  let diff = TOTAL_SIEGES - seatsPerRow.reduce((a,b)=>a+b,0);
+  let idx = seatsPerRow.length-1;
+  while(diff!==0){
+    seatsPerRow[idx] += diff>0?1:-1;
+    diff += diff>0?-1:1;
+    idx = (idx-1+seatsPerRow.length)%seatsPerRow.length;
+  }
+
+  const boundaries = [0];
+  let acc=0;
+  PARTIES.forEach(p=>{ acc += p.sieges/TOTAL_SIEGES; boundaries.push(acc); });
+
+  seatNodes = [];
+  for(let row=0; row<N_ROWS; row++){
+    const n = seatsPerRow[row];
+    const r = radii[row];
+    for(let i=0;i<n;i++){
+      const frac = (i+0.5)/n;
+      const angleDeg = 180 - frac*180;
+      const angle = angleDeg * Math.PI/180;
+      const x = CX + r*Math.cos(angle);
+      const y = CY - r*Math.sin(angle);
+
+      let partyIndex = boundaries.findIndex((b,bi)=> frac < b && bi>0);
+      if(partyIndex===-1) partyIndex = PARTIES.length;
+      const party = PARTIES[partyIndex-1] || PARTIES[PARTIES.length-1];
+
+      seatNodes.push({x,y,party:party.id});
+    }
+  }
+}
+
+let seatsByParty = {}; // partyId -> [dotElement, ...] — construit une seule fois, réutilisé à chaque survol
+const tooltip = document.getElementById("tooltip");
+const hemiCardEl = document.querySelector(".hemi-card");
+
+function renderHemicycle(){
+  svg.innerHTML = "";
+  seatsByParty = {};
+  PARTIES.forEach(p=> seatsByParty[p.id] = []);
+
+  const seatR = 6.4;
+  const hitR = 11;
+  const fragment = document.createDocumentFragment(); // un seul reflow au lieu de 1154 insertions
+
+  seatNodes.forEach(s=>{
+    const party = PARTIES.find(p=>p.id===s.party);
+
+    const hit = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    hit.setAttribute("cx", s.x.toFixed(1));
+    hit.setAttribute("cy", s.y.toFixed(1));
+    hit.setAttribute("r", hitR);
+    hit.classList.add("siege-hit");
+    hit.dataset.party = s.party;
+
+    const dot = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    dot.setAttribute("cx", s.x.toFixed(1));
+    dot.setAttribute("cy", s.y.toFixed(1));
+    dot.setAttribute("r", seatR);
+    dot.setAttribute("fill", party.couleur);
+    dot.style.color = party.couleur;
+    dot.classList.add("siege");
+    dot.dataset.party = s.party;
+
+    hit.addEventListener("mouseenter", (e)=> onSeatHover(e, party));
+
+    fragment.appendChild(hit);
+    fragment.appendChild(dot);
+    seatsByParty[s.party].push(dot);
+  });
+
+  svg.appendChild(fragment);
+  hemiCardEl.addEventListener("mouseleave", onSeatLeave); // un seul listener pour toute la zone, pas un par siège
+}
+
+/* ---------- Interaction survol ---------- */
+
+let partyEnCours = null; // dernier groupe survolé, pour ne modifier que la différence
+
+function setPartyState(partyId, state){
+  // state: "normal" | "dim" | "hovered" — ne touche que les sièges de ce groupe
+  seatsByParty[partyId].forEach(el=>{
+    el.classList.remove("dim","hovered");
+    if(state === "dim") el.classList.add("dim");
+    if(state === "hovered") el.classList.add("hovered");
+  });
+}
+
+function currentLoi(){
+  const id = document.getElementById("loi-select").value;
+  return LOIS.find(l=>l.id===id);
+}
+
+function onSeatHover(e, party){
+  if(partyEnCours === party.id){
+    updateTooltip(e, party);
+    return; // déjà en surbrillance, rien à changer visuellement
+  }
+
+  if(partyEnCours === null){
+    // premier survol : on assombrit tous les autres groupes en une passe
+    PARTIES.forEach(p=> setPartyState(p.id, p.id===party.id ? "hovered" : "dim"));
+  } else {
+    // survol suivant : ne touche que l'ancien groupe (repasse en dim) et le nouveau (passe en hovered)
+    setPartyState(partyEnCours, "dim");
+    setPartyState(party.id, "hovered");
+  }
+  partyEnCours = party.id;
+  updateTooltip(e, party);
+}
+
+function updateTooltip(e, party){
+  const loi = currentLoi();
+  if(!loi) return;
+  const v = loi.votes[party.id];
+  const rect = hemiCardEl.getBoundingClientRect();
+  tooltip.style.left = (e.clientX - rect.left) + "px";
+  tooltip.style.top = (e.clientY - rect.top) + "px";
+  tooltip.innerHTML = v ? `
+    <b>${party.nom}</b>
+    <span class="vote-pour">Pour : ${v.pour}</span> ·
+    <span class="vote-contre">Contre : ${v.contre}</span> ·
+    <span class="vote-abst">Abstention : ${v.abst}</span>
+  ` : `
+    <b>${party.nom}</b>
+    <span class="vote-abst">Vote non communiqué dans les sources disponibles</span>
+  `;
+  tooltip.classList.add("visible");
+}
+function onSeatLeave(){
+  if(partyEnCours !== null){
+    PARTIES.forEach(p=> setPartyState(p.id, "normal"));
+    partyEnCours = null;
+  }
+  tooltip.classList.remove("visible");
+}
+
+/* ---------- Sélecteur de loi + panneau détail ---------- */
+
+function populateLoiSelect(filter="", theme="Tous"){
+  const sel = document.getElementById("loi-select");
+  const pill = document.getElementById("resultat-pill");
+  const f = filter.trim().toLowerCase();
+  let filtered = f ? LOIS.filter(l => l.titre.toLowerCase().includes(f)) : LOIS;
+  if(theme !== "Tous") filtered = filtered.filter(l => l.theme === theme);
+
+  if(filtered.length === 0){
+    sel.innerHTML = `<option value="">Aucune loi ne correspond</option>`;
+    sel.disabled = true;
+    pill.style.display = "none";
+    document.getElementById("breakdown-title").textContent = "Aucun résultat";
+    document.getElementById("breakdown-list").innerHTML = "";
+    document.getElementById("stat-cards").innerHTML = "";
+    return;
+  }
+
+  sel.disabled = false;
+  pill.style.display = "";
+  sel.innerHTML = filtered.map(l=>`<option value="${l.id}">${l.reel ? "✓ " : "◌ "}${l.titre}</option>`).join("");
+  updateBreakdown();
+}
+
+let selectedTheme = "Tous";
+function renderThemeFilter(){
+  const themes = ["Tous", ...new Set(LOIS.map(l=>l.theme))];
+  const bar = document.getElementById("theme-filter-bar");
+  bar.innerHTML = themes.map(t=>`
+    <div class="theme-chip ${t===selectedTheme?'selected':''}" data-theme="${t}">${t}</div>
+  `).join("");
+  bar.querySelectorAll(".theme-chip").forEach(chip=>{
+    chip.addEventListener("click", ()=>{
+      selectedTheme = chip.dataset.theme;
+      renderThemeFilter();
+      populateLoiSelect(document.getElementById("loi-search").value, selectedTheme);
+    });
+  });
+}
+
+document.getElementById("loi-search").addEventListener("input", (e)=>{
+  populateLoiSelect(e.target.value, selectedTheme);
+});
+document.getElementById("loi-select").addEventListener("change", updateBreakdown);
+
+function updateBreakdown(){
+  const loi = currentLoi();
+  const pill = document.getElementById("resultat-pill");
+  pill.textContent = loi.resultat === "adopte" ? "Adoptée" : "Rejetée";
+  pill.classList.remove("adopte","rejete","pop");
+  void pill.offsetWidth;
+  pill.classList.add(loi.resultat, "pop");
+
+  document.getElementById("breakdown-title").innerHTML =
+    `<span class="loi-source-badge ${loi.reel?'reel':'exemple'}">${loi.reel?'✓ Vote réel':'◌ Exemple pédagogique'}</span> ` +
+    loi.titre + " — " + loi.date + `<span class="loi-theme-tag">${loi.theme}</span>`;
+
+  document.getElementById("loi-provenance").innerHTML = `
+    <div class="loi-provenance-row"><span class="label">Proposée par</span><span class="value"><b>${loi.proposePar}</b></span></div>
+    <div class="loi-provenance-row"><span class="label">Adoptée grâce à</span><span class="value"><b>${loi.groupeMoteur}</b></span></div>
+    ${loi.reel ? `<div class="loi-provenance-row"><span class="label">Source</span><span class="value"><a href="${loi.sourceUrl}" target="_blank" rel="noopener">${loi.sourceLabel}</a></span></div>` : ""}
+    ${(() => { const ctx = checkContexteDate(loi.date); return ctx ? `<div class="loi-provenance-row"><span class="label"></span><span class="loi-contexte-alert">${ctx.label}</span></div>` : ""; })()}
+  `;
+
+  renderStatCards(loi);
+
+  const list = document.getElementById("breakdown-list");
+  list.innerHTML = PARTIES.map((p,idx)=>{
+    const v = loi.votes[p.id];
+    const votesHtml = v
+      ? `<span>P <b>${v.pour}</b></span><span>C <b>${v.contre}</b></span><span>A <b>${v.abst}</b></span>`
+      : `<span class="vote-nd">non communiqué</span>`;
+    return `
+      <div class="party-row" style="animation-delay:${idx*22}ms">
+        <span class="dot" style="background:${p.couleur}"></span>
+        <span class="party-name">${p.nom}</span>
+        <span class="party-votes">${votesHtml}</span>
+      </div>`;
+  }).join("");
+}
+
+function renderStatCards(loi){
+  // participation = part des sièges dont le vote n'est pas "abstention pure de séance" (ici on simplifie : pour+contre / total)
+  // les groupes à null (vote non communiqué dans les sources) sont exclus des calculs plutôt que comptés comme 0
+  let totalVotants=0, totalSieges=0;
+  const uniteParGroupe = PARTIES.map(p=>{
+    const v = loi.votes[p.id];
+    if(!v) return null;
+    const total = v.pour+v.contre+v.abst;
+    totalVotants += v.pour+v.contre;
+    totalSieges += total;
+    const maxCamp = Math.max(v.pour,v.contre,v.abst);
+    return { nom:p.nom, unite: maxCamp/total };
+  });
+  const participation = (totalVotants/totalSieges*100).toFixed(0);
+  const groupesConnus = uniteParGroupe.filter(Boolean);
+  const plusUni = groupesConnus.reduce((a,c)=> c.unite>a.unite? c:a);
+  const plusDivise = groupesConnus.reduce((a,c)=> c.unite<a.unite? c:a);
+
+  document.getElementById("stat-cards").innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">Participation</div>
+      <div class="stat-value accent">${participation}%</div>
+      <div class="stat-sub">des député·es ont pris part au vote</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Groupe le plus uni</div>
+      <div class="stat-value">${plusUni.nom}</div>
+      <div class="stat-sub">${(plusUni.unite*100).toFixed(0)}% dans la même direction</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Groupe le plus divisé</div>
+      <div class="stat-value">${plusDivise.nom}</div>
+      <div class="stat-sub">${(plusDivise.unite*100).toFixed(0)}% dans la même direction</div>
+    </div>
+  `;
+}
+
+function renderLegend(){
+  document.getElementById("legend").innerHTML = PARTIES.map(p=>`
+    <span class="legend-item"><span class="dot" style="background:${p.couleur}"></span>${p.id} (${p.sieges})</span>
+  `).join("");
+}
+
+/* ---------- Vue historique par parti ---------- */
+
+let selectedPartyId = "RN";
+
+function renderPartyChips(){
+  const bar = document.getElementById("party-select-bar");
+  bar.innerHTML = PARTIES.map(p=>`
+    <div class="party-chip ${p.id===selectedPartyId?'selected':''}" data-id="${p.id}">
+      <span class="dot" style="background:${p.couleur}"></span>${p.nom}
+    </div>
+  `).join("");
+  bar.querySelectorAll(".party-chip").forEach(chip=>{
+    chip.addEventListener("click", ()=>{
+      selectedPartyId = chip.dataset.id;
+      renderPartyChips();
+      renderHistorique();
+    });
+  });
+}
+
+function renderHistorique(){
+  const party = PARTIES.find(p=>p.id===selectedPartyId);
+  document.getElementById("histo-party-title").textContent = "Historique des votes — " + party.nom;
+
+  const f = document.getElementById("histo-search").value.trim().toLowerCase();
+  const loisFiltrees = f ? LOIS.filter(l=>l.titre.toLowerCase().includes(f)) : LOIS;
+
+  const list = document.getElementById("histo-list");
+
+  if(loisFiltrees.length === 0){
+    list.innerHTML = `<p style="color:var(--text-faint);font-size:14px;">Aucune loi ne correspond à cette recherche.</p>`;
+    return;
+  }
+
+  list.innerHTML = loisFiltrees.map((loi,idx)=>{
+    const v = loi.votes[party.id];
+    const badge = `<span class="loi-source-badge ${loi.reel?'reel':'exemple'}" style="font-size:10px;padding:1px 8px;">${loi.reel?'✓ réel':'◌ exemple'}</span>`;
+
+    if(!v){
+      return `
+        <div class="histo-row" style="animation-delay:${idx*30}ms">
+          <div>
+            <div class="histo-loi">${badge} ${loi.titre}</div>
+            <div class="histo-date">${loi.date}</div>
+          </div>
+          <span class="histo-vote-tag tag-partage">Non communiqué</span>
+          <div class="histo-bar"><div style="width:100%;background:var(--border)"></div></div>
+        </div>`;
+    }
+
+    const total = v.pour+v.contre+v.abst;
+    const pctP = (v.pour/total*100).toFixed(0);
+    const pctC = (v.contre/total*100).toFixed(0);
+    const pctA = (v.abst/total*100).toFixed(0);
+
+    let tagClass="tag-partage", tagLabel="Partagé";
+    if(v.pour > v.contre && v.pour > v.abst){ tagClass="tag-pour"; tagLabel="Majorité Pour"; }
+    else if(v.contre > v.pour && v.contre > v.abst){ tagClass="tag-contre"; tagLabel="Majorité Contre"; }
+
+    return `
+      <div class="histo-row" style="animation-delay:${idx*30}ms">
+        <div>
+          <div class="histo-loi">${badge} ${loi.titre}</div>
+          <div class="histo-date">${loi.date}</div>
+        </div>
+        <span class="histo-vote-tag ${tagClass}">${tagLabel}</span>
+        <div class="histo-bar">
+          <div style="width:${pctP}%;background:var(--vert)"></div>
+          <div style="width:${pctC}%;background:var(--rouge)"></div>
+          <div style="width:${pctA}%;background:var(--text-faint)"></div>
+        </div>
+      </div>`;
+  }).join("");
+}
+
+document.getElementById("histo-search").addEventListener("input", renderHistorique);
+
+/* ---------- Prochains meetings ---------- */
+
+const MEETINGS = [
+  {
+    jour:"5", mois:"SEPT.", heure:"16h00",
+    lieu:"Braderie de Lille — Porte de Paris, stand La France insoumise, 17 place Simon Vollant",
+    parti:"LFI", partyColor:"#D6284B",
+    titre:"Discours de Jean-Luc Mélenchon",
+    desc:"Prise de parole dans le cadre de la campagne pour la présidentielle 2027, en marge de la Braderie de Lille.",
+    source:{ nom:"lafranceinsoumise.fr", url:"https://lafranceinsoumise.fr/2026/08/28/melenchon-braderie-lille-2026/" },
+    verified:true
+  },
+  {
+    jour:"11-13", mois:"SEPT.", heure:"—",
+    lieu:"Le Plessis-Pâté (Essonne)",
+    parti:"GDR", partyColor:"#A32E22",
+    titre:"Fête de l'Humanité",
+    desc:"Grand rassemblement annuel traditionnellement lié au Parti communiste français, avec de nombreuses prises de parole politiques.",
+    source:{ nom:"parlons-politique.fr", url:"https://www.parlons-politique.fr/elections/rentree-politique-2026-les-dates-cles-pour-comprendre-les-choix-qui-peseront-sur-la-presidentielle_25184/" },
+    verified:true
+  },
+  {
+    jour:"12", mois:"SEPT.", heure:"—",
+    lieu:"Nogent-sur-Marne (Val-de-Marne)",
+    parti:"LR", partyColor:"#2F6FE0",
+    titre:"Réunion des Jeunes Républicains, avec Bruno Retailleau",
+    desc:"Rassemblement de la branche jeunesse des Républicains, en présence du président du parti Bruno Retailleau.",
+    source:{ nom:"parlons-politique.fr", url:"https://www.parlons-politique.fr/elections/rentree-politique-2026-les-dates-cles-pour-comprendre-les-choix-qui-peseront-sur-la-presidentielle_25184/" },
+    verified:true
+  },
+];
+
+function renderMeetings(){
+  const list = document.getElementById("meeting-list");
+  list.innerHTML = MEETINGS.map((m,idx)=>`
+    <div class="meeting-card ${m.verified?'':'placeholder'}" style="animation-delay:${idx*30}ms">
+      <div class="meeting-date-badge">
+        <div class="jour">${m.jour}</div>
+        <div class="mois">${m.mois}</div>
+      </div>
+      <div class="meeting-body">
+        <h4>${m.titre}${m.verified?'<span class="verified-badge">✓ vérifié</span>':''}</h4>
+        <div class="meeting-meta">
+          <span class="dot-inline" style="background:${m.partyColor}"></span>${m.parti} · ${m.heure} · ${m.lieu}
+        </div>
+        <div class="meeting-desc">${m.desc}</div>
+        ${m.source ? `<div class="meeting-source">Source : <a href="${m.source.url}" target="_blank" rel="noopener">${m.source.nom}</a></div>` : ''}
+      </div>
+    </div>
+  `).join("");
+}
+
+/* ---------- Sondages 2027 ---------- */
+
+const INSTITUTS = [
+  {
+    id:"ifop", nom:"IFOP-Fiducial",
+    date:"24-25 août 2026", echantillon:"1 598 personnes",
+    source:"LCI / Le Figaro / Sud Radio", url:"https://sondages-presidentielle2027.fr/instituts/ifop.html",
+    hypothese:"Hypothèse à 11 candidats (la plus large testée par l'institut)",
+    scores:{
+      LE_PEN:[33,35], MELENCHON:[16,19], PHILIPPE:[14.5,21], ATTAL:[8,15], RETAILLEAU:[6,12], GLUCKSMANN:null,
+    }
+  },
+  {
+    id:"harris", nom:"Harris Interactive",
+    date:"18-19 août 2026", echantillon:"non précisé dans la source",
+    source:"le-francais-moyen.com (agrégateur Wikipédia/instituts)", url:"https://le-francais-moyen.com/elections/sondages-2027/",
+    hypothese:"Hypothèse principale de la vague",
+    scores:{
+      LE_PEN:[35,38], MELENCHON:[16,17], PHILIPPE:[14,19], ATTAL:[8,15], RETAILLEAU:null, GLUCKSMANN:[10,10],
+    }
+  },
+];
+
+// Candidats réels déclarés ou pressentis, couleur reprise du parti le plus proche pour cohérence visuelle
+const CANDIDATS = [
+  { id:"LE_PEN",     nom:"Marine Le Pen",       parti:"RN",  couleur:"#5B4FC9" },
+  { id:"MELENCHON",  nom:"Jean-Luc Mélenchon",  parti:"LFI", couleur:"#D6284B" },
+  { id:"PHILIPPE",   nom:"Édouard Philippe",    parti:"HOR", couleur:"#0FA89C" },
+  { id:"ATTAL",      nom:"Gabriel Attal",       parti:"EPR", couleur:"#E0B400" },
+  { id:"RETAILLEAU", nom:"Bruno Retailleau",    parti:"LR",  couleur:"#2F6FE0" },
+  { id:"GLUCKSMANN", nom:"Raphaël Glucksmann",  parti:"SOC", couleur:"#D6488A" },
+];
+
+let selectedInstitut = "ifop";
+
+function renderSourceBar(){
+  const bar = document.getElementById("source-bar");
+  bar.innerHTML = INSTITUTS.map(inst=>`
+    <div class="source-chip ${selectedInstitut===inst.id?'selected':''}" data-id="${inst.id}">
+      <span class="check">${selectedInstitut===inst.id?'✓':''}</span>${inst.nom} — ${inst.date}
+    </div>
+  `).join("");
+  bar.querySelectorAll(".source-chip").forEach(chip=>{
+    chip.addEventListener("click", ()=>{
+      selectedInstitut = chip.dataset.id;
+      renderSourceBar();
+      renderSondageAverage();
+    });
+  });
+}
+
+function renderSondageAverage(){
+  const inst = INSTITUTS.find(i=>i.id===selectedInstitut);
+  document.getElementById("sondage-institut-title").textContent =
+    `Intentions de vote — 1er tour, présidentielle 2027 · ${inst.nom}`;
+  document.getElementById("sondage-avg-sub").innerHTML =
+    `${inst.hypothese} · Échantillon : ${inst.echantillon} · <a href="${inst.url}" target="_blank" rel="noopener" style="color:var(--accent);">${inst.source}</a>`;
+
+  const disponibles = CANDIDATS
+    .map(c=>({...c, range: inst.scores[c.id]}))
+    .filter(c=>c.range)
+    .sort((a,b)=> (b.range[0]+b.range[1]) - (a.range[0]+a.range[1]));
+
+  const maxVal = Math.max(...disponibles.map(c=>c.range[1]));
+  const list = document.getElementById("sondage-avg-list");
+  list.innerHTML = disponibles.map((c,idx)=>{
+    const mid = (c.range[0]+c.range[1])/2;
+    const label = c.range[0]===c.range[1] ? `~${c.range[0]}%` : `${c.range[0]}–${c.range[1]}%`;
+    return `
+    <div class="sondage-bar-row" style="animation-delay:${idx*25}ms">
+      <div class="bloc-name">${c.nom}</div>
+      <div class="sondage-bar-track">
+        <div class="sondage-bar-fill" style="width:${(mid/maxVal*100).toFixed(1)}%;background:${c.couleur}"></div>
+      </div>
+      <div class="sondage-bar-pct">${label}</div>
+    </div>`;
+  }).join("");
+}
+
+/* ---------- Quiz d'affinité ---------- */
+
+const QUIZ_LOIS = LOIS.slice(0, 4); // 4 lois suffisent pour un quiz rapide
+let quizReponses = {}; // { loiId: "pour"|"contre"|"abst" }
+
+function renderQuiz(){
+  quizReponses = {};
+  const container = document.getElementById("quiz-container");
+  container.innerHTML = QUIZ_LOIS.map((loi,idx)=>`
+    <div class="quiz-card">
+      <div class="quiz-progress">Question ${idx+1} / ${QUIZ_LOIS.length} · ${loi.theme}</div>
+      <div class="quiz-question">${loi.titre}</div>
+      <div class="quiz-options" data-loi="${loi.id}">
+        <div class="quiz-option" data-vote="pour">Pour</div>
+        <div class="quiz-option" data-vote="contre">Contre</div>
+        <div class="quiz-option" data-vote="abst">Abstention</div>
+      </div>
+    </div>
+  `).join("") + `<button class="quiz-cta" id="quiz-submit" disabled>Voir mon résultat</button>`;
+
+  container.querySelectorAll(".quiz-options").forEach(group=>{
+    const loiId = group.dataset.loi;
+    group.querySelectorAll(".quiz-option").forEach(opt=>{
+      opt.addEventListener("click", ()=>{
+        quizReponses[loiId] = opt.dataset.vote;
+        group.querySelectorAll(".quiz-option").forEach(o=>o.classList.remove("picked-pour","picked-contre","picked-abst"));
+        opt.classList.add("picked-"+opt.dataset.vote);
+        checkQuizComplete();
+      });
+    });
+  });
+
+  document.getElementById("quiz-submit").addEventListener("click", showQuizResult);
+}
+
+function checkQuizComplete(){
+  const btn = document.getElementById("quiz-submit");
+  btn.disabled = Object.keys(quizReponses).length < QUIZ_LOIS.length;
+}
+
+function showQuizResult(){
+  // pour chaque parti, calcule le % d'accord entre le choix de l'utilisateur
+  // et la position majoritaire du parti sur chaque loi répondue
+  const scores = PARTIES.map(p=>{
+    let accord = 0, comptes = 0;
+    QUIZ_LOIS.forEach(loi=>{
+      const v = loi.votes[p.id];
+      if(!v) return; // vote non communiqué pour ce groupe sur cette loi : on ne compte pas ce cas
+      comptes++;
+      const positionGroupe = Object.entries({pour:v.pour, contre:v.contre, abst:v.abst}).sort((a,c)=>c[1]-a[1])[0][0];
+      if(positionGroupe === quizReponses[loi.id]) accord++;
+    });
+    return { nom:p.nom, couleur:p.couleur, pct: comptes ? Math.round(accord/comptes*100) : 0 };
+  }).sort((a,c)=>c.pct-a.pct);
+
+  const container = document.getElementById("quiz-container");
+  container.innerHTML = `
+    <div class="quiz-card">
+      <div class="quiz-question">Ton résultat : tu votes le plus souvent comme <span style="color:${scores[0].couleur}">${scores[0].nom}</span></div>
+      <div id="quiz-results-list"></div>
+      <button class="quiz-restart" id="quiz-restart">Refaire le quiz</button>
+    </div>
+  `;
+  document.getElementById("quiz-results-list").innerHTML = scores.map((s,idx)=>`
+    <div class="quiz-result-row" style="animation-delay:${idx*25}ms">
+      <div class="quiz-result-rank">${idx+1}</div>
+      <div class="quiz-result-name">${s.nom}</div>
+      <div class="quiz-result-track"><div class="quiz-result-fill" style="width:${s.pct}%;background:${s.couleur}"></div></div>
+      <div class="quiz-result-pct">${s.pct}%</div>
+    </div>
+  `).join("");
+  document.getElementById("quiz-restart").addEventListener("click", renderQuiz);
+}
+
+/* ---------- Dirigeants des partis (données réelles, vérifiées début septembre 2026) ---------- */
+
+const LEADERS = [
+  { parti:"RN", nom:"Jordan Bardella", role:"Président du Rassemblement National", couleur:"#5B4FC9",
+    note:"Marine Le Pen préside le groupe RN à l'Assemblée nationale." },
+  { parti:"LFI", nom:"Jean-Luc Mélenchon", role:"Fondateur et figure de référence de LFI", couleur:"#D6284B",
+    note:"Mathilde Panot préside le groupe LFI-NFP à l'Assemblée nationale." },
+  { parti:"EPR", nom:"Gabriel Attal", role:"Président de Renaissance / Ensemble pour la République", couleur:"#E0B400" },
+  { parti:"LR", nom:"Bruno Retailleau", role:"Président des Républicains", couleur:"#2F6FE0",
+    note:"Laurent Wauquiez préside le groupe Droite Républicaine à l'Assemblée nationale." },
+  { parti:"SOC", nom:"Olivier Faure", role:"Premier secrétaire du Parti Socialiste", couleur:"#D6488A" },
+  { parti:"ECO", nom:"Marine Tondelier", role:"Secrétaire nationale des Écologistes (EELV)", couleur:"#1E9F58" },
+  { parti:"GDR", nom:"Fabien Roussel", role:"Secrétaire national du Parti Communiste Français", couleur:"#A32E22" },
+  { parti:"DEM", nom:"François Bayrou", role:"Président du MoDem", couleur:"#E08800" },
+  { parti:"HOR", nom:"Édouard Philippe", role:"Président d'Horizons", couleur:"#0FA89C" },
+  { parti:"LIOT", nom:"— (pas de chef de parti unique)", role:"LIOT est un groupe pluraliste d'élus régionalistes/centristes, sans président national", couleur:"#A67C0A" },
+  { parti:"UDR", nom:"Éric Ciotti", role:"Président de l'UDR (Union des droites pour la République)", couleur:"#1E44B0" },
+];
+
+function renderLeaders(){
+  document.getElementById("leader-grid").innerHTML = LEADERS.map((l,idx)=>{
+    const initiales = l.nom.replace("—","?").split(" ").filter(w=>w.length>1).slice(0,2).map(w=>w[0]).join("");
+    return `
+      <div class="leader-card" style="animation-delay:${idx*25}ms">
+        <div class="leader-avatar" style="background:${l.couleur}">${initiales}</div>
+        <div class="leader-info">
+          <div class="leader-name">${l.nom}</div>
+          <div class="leader-role">${l.role}${l.note ? " · "+l.note : ""}</div>
+          <span class="leader-party">${l.parti}</span>
+        </div>
+      </div>`;
+  }).join("");
+}
+
+/* ---------- Chiffres clés France (données réelles INSEE) ---------- */
+
+// INDICATEURS : valeurs de secours intégrées, mêmes règles que pour LOIS ci-dessus.
+let INDICATEURS = [
+  { nom:"Population", valeur:"69,08 M", tendance:"neutre",
+    detail:"Population totale au 1ᵉʳ janvier 2026", motsCles:"population habitants démographie",
+    source:"INSEE", url:"https://www.insee.fr/fr/accueil", date:"1ᵉʳ janvier 2026" },
+  { nom:"Inflation", valeur:"+2,4 %", tendance:"up",
+    detail:"Évolution des prix à la consommation sur un an (estimation provisoire)", motsCles:"inflation prix consommation ipc pouvoir d'achat",
+    source:"INSEE", url:"https://www.insee.fr/fr/statistiques/9039020", date:"août 2026 (provisoire)" },
+  { nom:"Chômage", valeur:"8,3 %", tendance:"up",
+    detail:"Taux de chômage au sens du BIT, population active — 2,7 millions de personnes concernées", motsCles:"chomage chômage emploi travail",
+    source:"INSEE", url:"https://www.insee.fr/fr/statistiques/9032359", date:"2ᵉ trimestre 2026" },
+  { nom:"Croissance du PIB", valeur:"0,0 %", tendance:"neutre",
+    detail:"Évolution du PIB par rapport au trimestre précédent (estimation)", motsCles:"croissance pib économie",
+    source:"INSEE", url:"https://www.insee.fr/fr/accueil", date:"2ᵉ trimestre 2026" },
+  { nom:"Déficit public", valeur:"5,1 % du PIB", tendance:"up",
+    detail:"152,5 milliards d'euros en 2025 — au-dessus du seuil européen de 3 %, la France reste sous procédure pour déficit excessif", motsCles:"deficit déficit budget état finances publiques",
+    source:"INSEE", url:"https://www.insee.fr/fr/statistiques/8956575", date:"2025 (chiffre définitif)" },
+  { nom:"Dette publique", valeur:"115,6 % du PIB", tendance:"up",
+    detail:"3 460,5 milliards d'euros fin 2025 (dette au sens de Maastricht) — des estimateurs indépendants avancent ~118 % mi-2026, mais ce ne sont pas des chiffres officiels INSEE", motsCles:"dette endettement publique",
+    source:"INSEE", url:"https://www.insee.fr/fr/statistiques/8956575", date:"fin 2025 (chiffre définitif)" },
+];
+
+function renderChiffres(filter=""){
+  const f = filter.trim().toLowerCase();
+  const filtres = f ? INDICATEURS.filter(i =>
+    i.nom.toLowerCase().includes(f) || i.motsCles.toLowerCase().includes(f)
+  ) : INDICATEURS;
+
+  const grid = document.getElementById("chiffre-grid");
+  if(filtres.length === 0){
+    grid.innerHTML = `<p class="no-result-msg">Aucun indicateur ne correspond à cette recherche.</p>`;
+    return;
+  }
+
+  grid.innerHTML = filtres.map((i,idx)=>`
+    <div class="chiffre-card" style="animation-delay:${idx*25}ms">
+      <div class="chiffre-label">${i.nom}</div>
+      <div class="chiffre-value ${i.tendance==='up'?'up':i.tendance==='down'?'down':''}">${i.valeur}</div>
+      <div class="chiffre-sub">${i.detail}</div>
+      <div class="chiffre-source">${i.source} · ${i.date} — <a href="${i.url}" target="_blank" rel="noopener">source</a></div>
+    </div>
+  `).join("");
+}
+
+document.getElementById("chiffre-search").addEventListener("input", (e)=> renderChiffres(e.target.value));
+
+/* ---------- Jauges budget / dette (données INSEE réelles, dernier chiffre officiel) ---------- */
+
+function makeGaugeSVG(pct, maxScale, colorFill){
+  // anneau de progression en SVG — pct et maxScale en % du PIB
+  const r = 46, circ = 2*Math.PI*r;
+  const ratio = Math.min(pct/maxScale, 1);
+  const offset = circ * (1-ratio);
+  return `
+    <svg class="gauge-svg" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="${r}" fill="none" stroke="var(--border)" stroke-width="10"/>
+      <circle cx="60" cy="60" r="${r}" fill="none" stroke="${colorFill}" stroke-width="10"
+        stroke-linecap="round" stroke-dasharray="${circ.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}"
+        transform="rotate(-90 60 60)"/>
+      <text x="60" y="66" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="20" font-weight="600" fill="var(--text)">${pct}%</text>
+    </svg>`;
+}
+
+function renderBudgetGauges(){
+  document.getElementById("budget-hero").innerHTML = `
+    <div>
+      <h3>Déficit public</h3>
+      <div class="budget-hero-sub">Dernier chiffre officiel INSEE — année 2025</div>
+      <div class="gauge-block">
+        ${makeGaugeSVG(5.1, 10, "var(--rouge)")}
+        <div>
+          <div class="gauge-label">152,5 milliards d'euros</div>
+          <div class="gauge-value">5,1 % du PIB</div>
+          <div class="gauge-note">Seuil européen fixé à 3 % du PIB — la France est sous procédure pour déficit excessif.</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3>Dette publique</h3>
+      <div class="budget-hero-sub">Dernier chiffre officiel INSEE — fin 2025</div>
+      <div class="gauge-block">
+        ${makeGaugeSVG(115.6, 130, "var(--ambre)")}
+        <div>
+          <div class="gauge-label">3 460,5 milliards d'euros</div>
+          <div class="gauge-value">115,6 % du PIB</div>
+          <div class="gauge-note">Seuil de Maastricht fixé à 60 % du PIB. Des projections indépendantes (non-INSEE) évoquent ~118 % mi-2026 ; on affiche ici uniquement le chiffre officiel le plus récent.</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ---------- Justice & politique (faits établis, condamnations réelles uniquement, vérifié sept. 2026) ---------- */
+
+const CONDAMNATIONS = [
+  {
+    nom:"Nicolas Sarkozy", role:"Ex-président de la République", parti:"LR",
+    affaire:"Affaire des écoutes (« Bygmalion » écarté ici, voir entrée séparée)",
+    detail:"Condamné pour corruption et trafic d'influence (pacte avec le magistrat Gilbert Azibert). Peine : 1 an de prison dont 6 mois ferme, exécutés sous bracelet électronique.",
+    statut:"definitif", statutLabel:"Définitive",
+    source:"France 24", url:"https://www.france24.com/fr/france/20250926-scandales-politico-financiers-quels-sont-pr%C3%A9sidents-ministres-d%C3%A9j%C3%A0-condamn%C3%A9s"
+  },
+  {
+    nom:"Nicolas Sarkozy", role:"Ex-président de la République", parti:"LR",
+    affaire:"Affaire Bygmalion",
+    detail:"Dépassement du budget de campagne présidentielle 2012 maquillé en factures de meetings militants. Peine devenue définitive le 26 novembre 2025 : 1 an de prison dont 6 mois ferme aménageable.",
+    statut:"definitif", statutLabel:"Définitive",
+    source:"L'Essentiel de l'Éco", url:"https://lessentieldeleco.fr/7807-ces-personnalites-qui-ont-ete-condamnees-au-bracelet-electronique/"
+  },
+  {
+    nom:"Nicolas Sarkozy", role:"Ex-président de la République", parti:"LR",
+    affaire:"Affaire du financement libyen (campagne 2007)",
+    detail:"Condamné en première instance le 25 septembre 2025 à 5 ans de prison ferme pour association de malfaiteurs. Incarcéré le 21 octobre 2025. Procès en appel ouvert le 16 mars 2026, verdict attendu le 30 novembre 2026.",
+    statut:"appel", statutLabel:"1ʳᵉ instance — appel en cours, non définitive",
+    source:"France 24 / Euronews", url:"https://www.france24.com/fr/france/20250926-scandales-politico-financiers-quels-sont-pr%C3%A9sidents-ministres-d%C3%A9j%C3%A0-condamn%C3%A9s"
+  },
+  {
+    nom:"Marine Le Pen", role:"Présidente du groupe RN à l'Assemblée nationale", parti:"RN",
+    affaire:"Affaire des assistants parlementaires européens du FN",
+    detail:"Détournement de fonds du Parlement européen (2004-2016). Condamnée en 1ʳᵉ instance le 31 mars 2025, puis en appel le 7 juillet 2026 à 3 ans de prison dont 2 avec sursis et 1 an ferme aménageable (bracelet électronique) — sa peine d'inéligibilité, déjà purgée du fait de l'exécution provisoire, la laisse éligible pour 2027. Elle et les autres condamnés ont formé un pourvoi en cassation le 24 juillet 2026.",
+    statut:"appel", statutLabel:"Appel — pourvoi en cassation en cours, non définitive",
+    source:"Touteleurope.eu", url:"https://www.touteleurope.eu/vie-politique-des-etats-membres/proces-des-assistants-du-rn-marine-le-pen-condamnee-en-appel-mais-eligible-a-l-election-presidentielle-2027/"
+  },
+  {
+    nom:"François Fillon", role:"Ex-Premier ministre (RPR/UMP puis LR)", parti:"LR",
+    affaire:"Affaire des emplois fictifs (« Penelope Gate »)",
+    detail:"Emploi fictif de son épouse comme assistante parlementaire. Le statut d'emploi fictif est confirmé par la Cour de cassation en avril 2024. Peine définitive : 4 ans de prison avec sursis, 375 000 € d'amende, 5 ans d'inéligibilité.",
+    statut:"definitif", statutLabel:"Définitive",
+    source:"Poligraph.fr", url:"https://poligraph.fr/affaires/condamnations?certainty=etabli"
+  },
+  {
+    nom:"Jérôme Cahuzac", role:"Ex-ministre du Budget", parti:"SOC",
+    affaire:"Fraude fiscale et blanchiment",
+    detail:"Compte bancaire non déclaré à l'étranger dissimulé pendant qu'il était ministre du Budget chargé de la lutte contre la fraude fiscale. Condamnation confirmée par la Cour de cassation en 2018.",
+    statut:"definitif", statutLabel:"Définitive",
+    source:"Presse judiciaire française", url:"https://www.france24.com/fr/france/20250926-scandales-politico-financiers-quels-sont-pr%C3%A9sidents-ministres-d%C3%A9j%C3%A0-condamn%C3%A9s"
+  },
+  {
+    nom:"Patrick Balkany", role:"Ex-maire de Levallois-Perret", parti:"LR",
+    affaire:"Fraude fiscale et blanchiment",
+    detail:"Dissimulation de patrimoine et fraude fiscale sur plusieurs années. Condamnation définitive.",
+    statut:"definitif", statutLabel:"Définitive",
+    source:"L'Essentiel de l'Éco", url:"https://lessentieldeleco.fr/7807-ces-personnalites-qui-ont-ete-condamnees-au-bracelet-electronique/"
+  },
+];
+
+let justiceFiltrePartiActif = "Tous";
+
+function renderJusticeSummary(){
+  const partisConcernes = [...new Set(CONDAMNATIONS.map(c=>c.parti))];
+  const counts = partisConcernes.map(pid=>{
+    const party = PARTIES.find(p=>p.id===pid);
+    return { nom: party ? party.id : pid, n: CONDAMNATIONS.filter(c=>c.parti===pid).length };
+  }).sort((a,b)=>b.n-a.n);
+
+  document.getElementById("justice-summary").innerHTML = counts.map(c=>`
+    <div class="justice-summary-card">
+      <div class="n">${c.n}</div>
+      <div class="p">${c.nom}</div>
+    </div>
+  `).join("");
+}
+
+function renderJusticeFilterBar(){
+  const partisConcernes = ["Tous", ...new Set(CONDAMNATIONS.map(c=>c.parti))];
+  const bar = document.getElementById("justice-filter-bar");
+  bar.innerHTML = partisConcernes.map(pid=>{
+    const label = pid==="Tous" ? "Tous" : pid;
+    return `<div class="theme-chip ${pid===justiceFiltrePartiActif?'selected':''}" data-parti="${pid}">${label}</div>`;
+  }).join("");
+  bar.querySelectorAll(".theme-chip").forEach(chip=>{
+    chip.addEventListener("click", ()=>{
+      justiceFiltrePartiActif = chip.dataset.parti;
+      renderJusticeFilterBar();
+      renderJusticeList();
+    });
+  });
+}
+
+function renderJusticeList(){
+  const filtres = justiceFiltrePartiActif==="Tous" ? CONDAMNATIONS : CONDAMNATIONS.filter(c=>c.parti===justiceFiltrePartiActif);
+  document.getElementById("justice-list").innerHTML = filtres.map((c,idx)=>`
+    <div class="justice-card" style="animation-delay:${idx*25}ms">
+      <div class="justice-card-head">
+        <span class="justice-name">${c.nom}</span>
+        <span class="justice-role">${c.role} · ${c.parti}</span>
+        <span class="justice-status ${c.statut}">${c.statutLabel}</span>
+      </div>
+      <div class="justice-affaire">${c.affaire}</div>
+      <div class="justice-detail">${c.detail}</div>
+      <div class="justice-meta">Source : <a href="${c.url}" target="_blank" rel="noopener">${c.source}</a></div>
+    </div>
+  `).join("");
+}
+
+/* ---------- Détection jour férié / vacances scolaires ---------- */
+// Calendrier réel 2025-2026. Vacances scolaires = fenêtre globale toutes zones confondues
+// (approximation : les zones A/B/C ont des dates légèrement différentes, on prend l'union la plus large).
+
+const JOURS_FERIES = [
+  "2025-01-01","2025-04-21","2025-05-01","2025-05-08","2025-05-29","2025-06-09","2025-07-14","2025-08-15","2025-11-01","2025-11-11","2025-12-25",
+  "2026-01-01","2026-04-06","2026-05-01","2026-05-08","2026-05-14","2026-05-25","2026-07-14","2026-08-15","2026-11-01","2026-11-11","2026-12-25",
+];
+const VACANCES_SCOLAIRES = [
+  { nom:"Toussaint", debut:"2025-10-18", fin:"2025-11-03" },
+  { nom:"Noël", debut:"2025-12-20", fin:"2026-01-05" },
+  { nom:"Hiver", debut:"2026-02-07", fin:"2026-03-09" },
+  { nom:"Printemps", debut:"2026-04-04", fin:"2026-05-04" },
+  { nom:"Été", debut:"2026-07-04", fin:"2026-09-01" },
+];
+
+function parseDateFR(dateStr){
+  // "14 mars 2026" -> Date
+  const mois = {janvier:0,février:1,mars:2,avril:3,mai:4,juin:5,juillet:6,août:7,septembre:8,octobre:9,novembre:10,décembre:11};
+  const parts = dateStr.toLowerCase().replace(/[^a-zéû0-9 ]/g,"").split(" ").filter(Boolean);
+  const jour = parseInt(parts[0],10);
+  const m = mois[parts[1]];
+  const an = parseInt(parts[2],10);
+  if(isNaN(jour) || m===undefined || isNaN(an)) return null;
+  return new Date(an, m, jour);
+}
+
+function checkContexteDate(dateStr){
+  const d = parseDateFR(dateStr);
+  if(!d) return null;
+  const iso = d.toISOString().slice(0,10);
+  if(JOURS_FERIES.includes(iso)){
+    return { type:"ferie", label:"⚠️ Votée un jour férié" };
+  }
+  for(const v of VACANCES_SCOLAIRES){
+    if(iso >= v.debut && iso <= v.fin){
+      return { type:"vacances", label:`⚠️ Votée pendant les vacances scolaires (${v.nom})` };
+    }
+  }
+  return null;
+}
+
+/* ---------- Accueil (tableau de bord) ---------- */
+
+function renderAccueil(){
+  // Stats clés en haut de page (réutilise les données déjà chargées)
+  document.getElementById("accueil-hero-stats").innerHTML = `
+    <div class="accueil-hero-stat"><div class="v">577</div><div class="l">Sièges à l'Assemblée</div></div>
+    <div class="accueil-hero-stat"><div class="v">${INDICATEURS.find(i=>i.nom==="Chômage").valeur}</div><div class="l">Chômage (T2 2026)</div></div>
+    <div class="accueil-hero-stat"><div class="v">${INDICATEURS.find(i=>i.nom==="Inflation").valeur}</div><div class="l">Inflation (août 2026)</div></div>
+    <div class="accueil-hero-stat"><div class="v">${INDICATEURS.find(i=>i.nom==="Déficit public").valeur}</div><div class="l">Déficit public (2025)</div></div>
+  `;
+
+  // "À la une" : dernière loi votée, prochain meeting, tendance sondages
+  const derniereLoi = [...LOIS].sort((a,b)=> parseDateFR(b.date) - parseDateFR(a.date))[0];
+  const prochainMeeting = MEETINGS.find(m=>m.verified) || MEETINGS[0];
+  const instPrincipal = INSTITUTS.find(i=>i.id==="ifop") || INSTITUTS[0];
+  const enTete = CANDIDATS
+    .map(c=>({...c, range: instPrincipal.scores[c.id]}))
+    .filter(c=>c.range)
+    .sort((a,b)=> (b.range[0]+b.range[1]) - (a.range[0]+a.range[1]))[0];
+
+  const highlights = [
+    {
+      eyebrow: derniereLoi.resultat==="adopte" ? "Dernière loi votée · Adoptée" : "Dernière loi votée · Rejetée",
+      titre: derniereLoi.titre,
+      sous: `${derniereLoi.date} · ${derniereLoi.theme}`,
+      tab: "scrutin"
+    },
+    {
+      eyebrow: prochainMeeting.verified ? "Prochain meeting · vérifié" : "Prochain meeting",
+      titre: prochainMeeting.titre,
+      sous: `${prochainMeeting.parti} · ${prochainMeeting.lieu}`,
+      tab: "meetings"
+    },
+    {
+      eyebrow: "Sondages 2027 · tendance actuelle",
+      titre: `${enTete.nom} en tête (${enTete.range[0]}–${enTete.range[1]}%)`,
+      sous: `${instPrincipal.nom}, ${instPrincipal.date}`,
+      tab: "sondages"
+    },
+  ];
+
+  document.getElementById("accueil-highlight-grid").innerHTML = highlights.map(h=>`
+    <div class="accueil-highlight-card" data-tab="${h.tab}">
+      <div class="accueil-highlight-eyebrow">${h.eyebrow}</div>
+      <div class="accueil-highlight-title">${h.titre}</div>
+      <div class="accueil-highlight-sub">${h.sous}</div>
+    </div>
+  `).join("");
+
+  document.querySelectorAll(".accueil-highlight-card").forEach(card=>{
+    card.addEventListener("click", ()=> activateTab(card.dataset.tab));
+  });
+}
+
+/* ---------- Onglets ---------- */
+
+function activateTab(tabId){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  const tabEl = document.querySelector(`.tab[data-tab="${tabId}"]`);
+  if(tabEl) tabEl.classList.add("active");
+  const viewEl = document.getElementById("view-"+tabId);
+  if(viewEl) viewEl.classList.add("active");
+  window.scrollTo({top:0, behavior:"smooth"});
+
+  // Referme le panneau des catégories et affiche la page active dans la barre repliée
+  const navToggle = document.getElementById("nav-toggle");
+  const navWrap = document.getElementById("nav-groups-wrap");
+  navWrap.classList.remove("open");
+  navToggle.setAttribute("aria-expanded","false");
+  const label = document.getElementById("nav-toggle-current");
+  label.textContent = (tabId !== "accueil" && tabEl && !tabEl.classList.contains("tab-home")) ? "· " + tabEl.textContent.trim() : "";
+}
+
+document.querySelectorAll(".tab").forEach(tab=>{
+  tab.addEventListener("click", ()=> activateTab(tab.dataset.tab));
+});
+
+document.getElementById("nav-toggle").addEventListener("click", (e)=>{
+  e.stopPropagation();
+  const wrap = document.getElementById("nav-groups-wrap");
+  const btn = document.getElementById("nav-toggle");
+  const isOpen = wrap.classList.toggle("open");
+  btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+});
+
+document.addEventListener("click", (e)=>{
+  const wrap = document.getElementById("nav-groups-wrap");
+  const topBar = document.querySelector(".top-bar");
+  if(wrap.classList.contains("open") && !topBar.contains(e.target)){
+    wrap.classList.remove("open");
+    document.getElementById("nav-toggle").setAttribute("aria-expanded","false");
+  }
+});
+
+/* ---------- Init ---------- */
+
+// Charge les données externes (mises à jour par les scripts d'automatisation) avant de
+// construire l'interface. En cas d'échec (fichier absent, ouverture en local sans serveur...),
+// le site continue avec des tableaux vides plutôt que de planter, et le signale dans la console.
+async function loadExternalData(){
+  try{
+    const [loisRes, indicRes] = await Promise.all([
+      fetch("data/lois.json"),
+      fetch("data/indicateurs.json"),
+    ]);
+    if(loisRes.ok){
+      const loisJson = await loisRes.json();
+      if(loisJson.lois?.length) LOIS = loisJson.lois;
+    } else {
+      console.warn("Impossible de charger data/lois.json — valeurs de secours conservées.", loisRes.status);
+    }
+    if(indicRes.ok){
+      const indicJson = await indicRes.json();
+      if(indicJson.indicateurs?.length) INDICATEURS = indicJson.indicateurs;
+    } else {
+      console.warn("Impossible de charger data/indicateurs.json — valeurs de secours conservées.", indicRes.status);
+    }
+  } catch(e){
+    console.warn(
+      "Chargement des données externes impossible (probablement une ouverture du fichier " +
+      "en local sans serveur — le navigateur bloque fetch() sur file://). " +
+      "Servir le dossier avec un petit serveur local (ex: `npx serve`) pour tester correctement.",
+      e
+    );
+  }
+}
+
+async function initSite(){
+  await loadExternalData();
+
+  buildSeats();
+  renderHemicycle();
+  renderLegend();
+  renderThemeFilter();
+  populateLoiSelect();
+  updateBreakdown();
+  renderPartyChips();
+  renderHistorique();
+  renderMeetings();
+  renderSourceBar();
+  renderSondageAverage();
+  renderQuiz();
+  renderLeaders();
+  renderChiffres();
+  renderBudgetGauges();
+  renderJusticeSummary();
+  renderJusticeFilterBar();
+  renderJusticeList();
+  renderAccueil();
+}
+
+initSite();
+</script>
+
+</body>
+</html>

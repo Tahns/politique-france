@@ -1,0 +1,72 @@
+{
+  "lastUpdated": "2026-09-03T00:00:00Z",
+  "indicateurs": [
+    {
+      "nom": "Population",
+      "valeur": "69,08 M",
+      "tendance": "neutre",
+      "detail": "Population totale au 1ᵉʳ janvier 2026",
+      "motsCles": "population habitants démographie",
+      "source": "INSEE",
+      "url": "https://www.insee.fr/fr/accueil",
+      "date": "1ᵉʳ janvier 2026",
+      "misAJourLe": "manuel"
+    },
+    {
+      "nom": "Inflation",
+      "valeur": "+2,4 %",
+      "tendance": "up",
+      "detail": "Évolution des prix à la consommation sur un an (estimation provisoire)",
+      "motsCles": "inflation prix consommation ipc pouvoir d'achat",
+      "source": "INSEE",
+      "url": "https://www.insee.fr/fr/statistiques/9039020",
+      "date": "août 2026 (provisoire)",
+      "misAJourLe": "manuel"
+    },
+    {
+      "nom": "Chômage",
+      "valeur": "8,3 %",
+      "tendance": "up",
+      "detail": "Taux de chômage au sens du BIT, population active — 2,7 millions de personnes concernées",
+      "motsCles": "chomage chômage emploi travail",
+      "source": "INSEE",
+      "url": "https://www.insee.fr/fr/statistiques/9032359",
+      "date": "2ᵉ trimestre 2026",
+      "idBank": "001688527",
+      "misAJourLe": "manuel"
+    },
+    {
+      "nom": "Croissance du PIB",
+      "valeur": "0,0 %",
+      "tendance": "neutre",
+      "detail": "Évolution du PIB par rapport au trimestre précédent (estimation)",
+      "motsCles": "croissance pib économie",
+      "source": "INSEE",
+      "url": "https://www.insee.fr/fr/accueil",
+      "date": "2ᵉ trimestre 2026",
+      "misAJourLe": "manuel"
+    },
+    {
+      "nom": "Déficit public",
+      "valeur": "5,1 % du PIB",
+      "tendance": "up",
+      "detail": "152,5 milliards d'euros en 2025 — au-dessus du seuil européen de 3 %, la France reste sous procédure pour déficit excessif",
+      "motsCles": "deficit déficit budget état finances publiques",
+      "source": "INSEE",
+      "url": "https://www.insee.fr/fr/statistiques/8956575",
+      "date": "2025 (chiffre définitif)",
+      "misAJourLe": "manuel"
+    },
+    {
+      "nom": "Dette publique",
+      "valeur": "115,6 % du PIB",
+      "tendance": "up",
+      "detail": "3 460,5 milliards d'euros fin 2025 (dette au sens de Maastricht) — des estimateurs indépendants avancent ~118 % mi-2026, mais ce ne sont pas des chiffres officiels INSEE",
+      "motsCles": "dette endettement publique",
+      "source": "INSEE",
+      "url": "https://www.insee.fr/fr/statistiques/8956575",
+      "date": "fin 2025 (chiffre définitif)",
+      "misAJourLe": "manuel"
+    }
+  ]
+}
